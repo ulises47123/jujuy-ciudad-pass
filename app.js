@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
             location: "Argentina",
             completed: 2,
             group: true,
-            estadia: "pleno", // 2 días
+            estadia: "pleno", // 2 días (Pasaporte Jujuy a Pleno)
             insignias: ["Guardián del Patrimonio"],
             cupones: []
         },
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             type: "residente",
             points: 2890,
             barrio: "Barrio Centro",
-            completed: 0,
+            completed: 4,
             group: false,
             estadia: "",
             insignias: ["Embajador Local"],
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             type: "residente",
             points: 3450,
             barrio: "Barrio Centro",
-            completed: 0,
+            completed: 8,
             group: false,
             estadia: "",
             insignias: ["Embajador Local", "Turista Responsable"],
@@ -454,7 +454,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modalMision.classList.remove('hidden');
     }
 
-    // Submit del cuestionario de misión (Valida respuestas)
+    // Submit del cuestionario de misión (Valida respuestas y desglosa puntos detallados)
     document.getElementById('form-verificar-preguntas').addEventListener('submit', (e) => {
         e.preventDefault();
         const id = document.getElementById('modal-mision-id').value;
@@ -470,16 +470,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (correctas) {
-            let ptsGanados = basePts;
+            // Desglose de puntos según PDF:
+            // Visitar y validar atractivo: +10 pts
+            // Responder correctamente: +10 pts
+            // Completar misión: +30 pts (Total base = 50 pts, o el valor de basePts especificado)
+            const visitaPts = 10;
+            const respuestasPts = 10;
+            const completarMisionPts = basePts - 20 > 0 ? basePts - 20 : 30;
             
+            let ptsGanados = visitaPts + respuestasPts + completarMisionPts;
+            let desgloseMsg = `Visita (+${visitaPts}) + Respuestas (+${respuestasPts}) + Misión (+${completarMisionPts})`;
+
             // Asignar bono de grupo si aplica
             if (currentUser.group) {
                 ptsGanados += 15;
+                desgloseMsg += ` + Bono Grupal (+15)`;
             }
 
             // Asignar bono de recomendación de residente
             if (recommendationAppliedBy) {
                 ptsGanados += 50;
+                desgloseMsg += ` + Recomendación Cruzada (+50)`;
                 
                 // Dar puntos al residente que recomendó
                 const db = getUsersDb();
@@ -487,7 +498,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     db[recommendationAppliedBy].points += 50;
                     saveUsersDb(db);
                 }
-                alert(`Recomendacion de ${recommendationAppliedBy} aplicada. Sumas 50 puntos extra y el residente recibe 50 puntos.`);
                 recommendationAppliedBy = null;
                 document.getElementById('tourist-recommendation-box').classList.add('hidden');
             }
@@ -498,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Asignar insignia por la categoría
             if (datos.insignia && !currentUser.insignias.includes(datos.insignia)) {
                 currentUser.insignias.push(datos.insignia);
-                alert(`Has ganado una nueva insignia: "${datos.insignia}"`);
+                alert(`¡Has ganado la insignia: "${datos.insignia}" por tu contribución!`);
             }
 
             // Registrar visita en estadísticas
@@ -523,10 +533,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (btn) {
                 btn.disabled = true;
                 btn.innerText = 'Completada';
-                btn.className = 'mt-2 px-4 py-2 bg-outline-variant text-outline rounded-xl text-label-sm font-bold self-start cursor-default';
+                btn.className = 'mt-3 px-4 py-2.5 bg-outline-variant text-outline rounded-xl text-xs font-bold self-start cursor-default';
             }
 
-            alert(`Mision completada correctamente. Sumaste ${ptsGanados} puntos.`);
+            alert(`¡Respuestas Correctas!\nPuntos sumados: ${desgloseMsg} = +${ptsGanados} pts.`);
         } else {
             alert('Respuestas incorrectas. Por favor lee la cartelería informativa e intenta de nuevo.');
         }
@@ -554,7 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 saveUsersDb(db);
 
                 actualizarUI();
-                alert(`Canje exitoso. Obtuviste el cupon: ${codigoCupon}`);
+                alert(`Canje exitoso. Obtuviste el cupón: ${codigoCupon}`);
             } else {
                 alert(`Puntos insuficientes. Necesitas ${costo} puntos para este beneficio.`);
             }
@@ -568,7 +578,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (db[cod] && db[cod].type === 'residente') {
             recommendationAppliedBy = cod;
-            recommendStatusMsg.innerText = `Recomendacion valida de: ${cod}. Se acreditaran 50 pts extra en tu proxima mision completada.`;
+            recommendStatusMsg.innerText = `Recomendación válida de: ${cod}. Se acreditarán 50 pts extra en tu próxima misión completada.`;
             recommendStatusMsg.classList.remove('hidden', 'text-error');
             recommendStatusMsg.classList.add('text-secondary');
         } else {
@@ -589,7 +599,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const box = document.getElementById('box-codigo-generado');
         const codeSpan = document.getElementById('codigo-generado');
         
-        // El código es simplemente el nombre del residente
         codeSpan.innerText = currentUser.name;
         box.classList.remove('hidden');
         
@@ -622,7 +631,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Simular Escaneo General
     document.getElementById('btn-scan-qr').addEventListener('click', () => {
-        alert('Simulador de escaneo: escanea un codigo QR en el Cabildo o Parque Botanico abriendo la pestaña de Misiones.');
+        alert('Simulador de escaneo: escanea un código QR en el Cabildo o Parque Botánico abriendo la pestaña de Misiones.');
         showView('misiones');
     });
 
@@ -640,9 +649,9 @@ document.addEventListener('DOMContentLoaded', () => {
             insignia: categoria === 'Historico' ? 'Guardián del Patrimonio' : 'Explorador Verde',
             preguntas: [
                 {
-                    q: 'Pregunta de validacion rapida para esta nueva ubicacion:',
-                    options: ['Opcion correcta (Verdadero)', 'Opcion incorrecta (Falso)'],
-                    correct: 'Opcion correcta (Verdadero)'
+                    q: 'Pregunta de validación rápida para esta nueva ubicación:',
+                    options: ['Opción correcta (Verdadero)', 'Opción incorrecta (Falso)'],
+                    correct: 'Opción correcta (Verdadero)'
                 }
             ]
         };
@@ -658,29 +667,29 @@ document.addEventListener('DOMContentLoaded', () => {
         const badgeColor = categoria === 'Historico' ? 'text-secondary bg-secondary/10' : 'text-tertiary-container bg-tertiary-fixed/30';
         
         const card = document.createElement('div');
-        card.className = 'flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant';
+        card.className = 'flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant p-4';
         card.innerHTML = `
             <div class="absolute left-0 top-0 bottom-0 w-1 ${colorBar}"></div>
-            <div class="flex flex-col flex-1 p-md gap-xs">
+            <div class="flex flex-col flex-1 gap-xs ml-2">
                 <div class="flex justify-between items-start">
-                    <span class="text-label-sm font-label-sm ${badgeColor} px-2 py-0.5 rounded-full">${categoria}</span>
+                    <span class="text-label-sm font-label-sm ${badgeColor} px-3 py-1 rounded-full">${categoria}</span>
                     <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+${puntos} pts</span>
                 </div>
-                <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-xs">${nombre}</h3>
-                <p class="text-label-sm text-on-surface-variant">Nueva mision agregada desde el panel administrativo.</p>
-                <button class="btn-mision-activar mt-2 px-4 py-2 bg-secondary text-on-secondary rounded-xl text-label-sm font-bold self-start" data-id="${id}" data-puntos="${puntos}">
-                    Iniciar Mision
+                <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-3">${nombre}</h3>
+                <p class="text-xs text-on-surface-variant mt-1">Nueva misión agregada desde el panel administrativo.</p>
+                <button class="btn-mision-activar mt-3 px-4 py-2.5 bg-secondary text-on-secondary rounded-xl text-xs font-bold self-start" data-id="${id}" data-puntos="${puntos}">
+                    Iniciar Misión
                 </button>
             </div>
         `;
 
         list.appendChild(card);
-        alert('Nueva mision agregada exitosamente.');
+        alert('Nueva misión agregada exitosamente.');
         document.getElementById('form-nueva-mision').reset();
         actualizarUI();
     });
 
-    // Actualizar la interfaz
+    // Actualizar la interfaz basada en el usuario activo
     function actualizarUI() {
         if (!currentUser) return;
 
@@ -691,14 +700,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const pLoc = document.getElementById('passport-location');
         const subtPasaporte = document.getElementById('subt-pasaporte');
 
+        // Cálculo dinámico de progreso del pasaporte según su estadía (Cambiante de verdad)
+        let totalMisionesObjetivo = 4; // Explorador por defecto
         if (currentUser.type === 'turista') {
             pLoc.innerText = currentUser.location || 'Argentina';
             
-            // Texto del tipo de Pasaporte
             let tipoPass = "Pasaporte Explorador (1 día)";
-            if (currentUser.estadia === "express") tipoPass = "Pasaporte Express (Mediodía)";
-            if (currentUser.estadia === "pleno") tipoPass = "Pasaporte Jujuy a Pleno (2 días)";
-            if (currentUser.estadia === "sinprisa") tipoPass = "Pasaporte Jujuy Sin Prisa (3+ días)";
+            if (currentUser.estadia === "express") {
+                tipoPass = "Pasaporte Express (Mediodía)";
+                totalMisionesObjetivo = 2;
+            }
+            if (currentUser.estadia === "pleno") {
+                tipoPass = "Pasaporte Jujuy a Pleno (2 días)";
+                totalMisionesObjetivo = 6;
+            }
+            if (currentUser.estadia === "sinprisa") {
+                tipoPass = "Pasaporte Jujuy Sin Prisa (3+ días)";
+                totalMisionesObjetivo = 8;
+            }
             
             subtPasaporte.innerText = `Tu pasaporte: ${tipoPass}`;
             document.getElementById('tourist-recommendation-box').classList.remove('hidden');
@@ -706,6 +725,7 @@ document.addEventListener('DOMContentLoaded', () => {
             pLoc.innerText = currentUser.barrio || 'San Salvador de Jujuy';
             subtPasaporte.innerText = "Perfil de Comunidad Residente";
             document.getElementById('tourist-recommendation-box').classList.add('hidden');
+            totalMisionesObjetivo = 10; // Objetivo residente de acciones comunitarias
         }
 
         document.getElementById('animated-points').innerText = currentUser.points;
@@ -724,12 +744,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentUser.insignias && currentUser.insignias.length > 0) {
             currentUser.insignias.forEach(ins => {
                 const span = document.createElement('span');
-                span.className = 'text-[10px] bg-secondary-container text-on-secondary-container font-bold px-2 py-0.5 rounded-md border border-outline-variant';
+                span.className = 'text-[10px] bg-secondary-container text-on-secondary-container font-bold px-2.5 py-1 rounded-md border border-outline-variant';
                 span.innerText = ins;
                 insigniasContainer.appendChild(span);
             });
         } else {
-            insigniasContainer.innerHTML = '<span class="text-xs bg-primary-container text-on-primary px-2 py-0.5 rounded-md">Ninguna</span>';
+            insigniasContainer.innerHTML = '<span class="text-xs bg-primary-container text-on-primary px-3 py-1 rounded-md">Ninguna</span>';
         }
 
         // Renderizar cupones
@@ -747,14 +767,24 @@ document.addEventListener('DOMContentLoaded', () => {
             cuponesBox.classList.add('hidden');
         }
 
-        // Progreso para nivel (meta 1500)
+        // Nivel e información de progreso dinámico del pasaporte
+        let nivelText = "Novato";
+        if (currentUser.points >= 500 && currentUser.points < 1500) nivelText = "Explorador";
+        if (currentUser.points >= 1500) nivelText = "Experto / Embajador";
+
+        document.getElementById('recompensa-sig-lbl').innerText = `Nivel actual: ${nivelText}`;
+
+        // Porcentaje real dinámico de misiones completadas respecto al objetivo del pasaporte
+        let porcentajeMisiones = Math.round((currentUser.completed / totalMisionesObjetivo) * 100);
+        if (porcentajeMisiones > 100) porcentajeMisiones = 100;
+        
+        document.getElementById('porcentaje-pasaporte-lbl').innerText = `${porcentajeMisiones}%`;
+        document.getElementById('barra-progreso').style.width = `${porcentajeMisiones}%`;
+        
+        // Puntos faltantes para siguiente rango
         let restantes = 1500 - currentUser.points;
         if (restantes < 0) restantes = 0;
         document.getElementById('pts-faltantes').innerText = `${restantes} pts para el siguiente nivel`;
-        
-        let porcentaje = (currentUser.points / 1500) * 100;
-        if (porcentaje > 100) porcentaje = 100;
-        document.getElementById('barra-progreso').style.width = `${porcentaje}%`;
 
         // Renderizar tabla de posiciones en vivo (Comunidad)
         const db = getUsersDb();
@@ -771,7 +801,7 @@ document.addEventListener('DOMContentLoaded', () => {
             div.innerHTML = `
                 <div class="font-bold text-primary w-8">${index + 1}</div>
                 <div class="flex-1">
-                    <span class="font-label-lg text-on-surface block font-bold">${res.name}</span>
+                    <span class="font-label-lg text-on-surface block font-bold text-sm">${res.name}</span>
                     <span class="text-xs text-on-surface-variant">${res.barrio || 'Residente'}</span>
                 </div>
                 <span class="font-label-lg text-tertiary-fixed-dim font-bold">${res.points} pts</span>
@@ -779,7 +809,7 @@ document.addEventListener('DOMContentLoaded', () => {
             leaderboard.appendChild(div);
         });
 
-        // Actualizar datos del Administrador
+        // Actualizar datos de administración
         const totalUsuarios = Object.keys(db).length;
         document.getElementById('admin-total-usuarios').innerText = totalUsuarios;
 
@@ -795,8 +825,34 @@ document.addEventListener('DOMContentLoaded', () => {
         const promedio = turistas.length > 0 ? (sumaDias / turistas.length).toFixed(1) : 0;
         document.getElementById('admin-promedio-estadia').innerText = `${promedio} días`;
 
-        // Renderizar tabla de visitas de administrador
+        // Renderizar Gráfico de barras interactivo de administración
         const visitas = getVisitasDb();
+        const adminGrafico = document.getElementById('admin-grafico-barras');
+        adminGrafico.innerHTML = '';
+
+        // Obtener el valor máximo para escalar las barras del gráfico al 100%
+        const maxVisitas = Math.max(...Object.values(visitas), 1);
+
+        Object.entries(visitas).forEach(([misionId, count]) => {
+            const mData = misionesData[misionId];
+            const titulo = mData ? mData.titulo : misionId;
+            const porcentajeBarra = Math.round((count / maxVisitas) * 100);
+
+            const barContainer = document.createElement('div');
+            barContainer.className = 'flex flex-col gap-1 w-full';
+            barContainer.innerHTML = `
+                <div class="flex justify-between text-xs font-bold text-on-surface">
+                    <span>${titulo}</span>
+                    <span>${count} visitas</span>
+                </div>
+                <div class="w-full h-3.5 bg-surface-variant rounded-full overflow-hidden border border-outline-variant">
+                    <div class="h-full bg-secondary rounded-full transition-all duration-500" style="width: ${porcentajeBarra}%"></div>
+                </div>
+            `;
+            adminGrafico.appendChild(barContainer);
+        });
+
+        // Renderizar tabla de visitas de administrador
         const tablaVisitas = document.getElementById('admin-tabla-visitas');
         tablaVisitas.innerHTML = '';
         
@@ -808,9 +864,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const tr = document.createElement('tr');
             tr.className = 'border-b border-outline-variant';
             tr.innerHTML = `
-                <td class="py-2 font-bold">${titulo}</td>
-                <td class="py-2 text-primary font-bold">${count} visitas</td>
-                <td class="py-2 text-on-surface-variant">${cat}</td>
+                <td class="py-3 font-bold">${titulo}</td>
+                <td class="py-3 text-primary font-bold">${count} visitas</td>
+                <td class="py-3 text-on-surface-variant">${cat}</td>
             `;
             tablaVisitas.appendChild(tr);
         });
