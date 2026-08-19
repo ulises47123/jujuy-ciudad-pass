@@ -33,11 +33,22 @@ document.addEventListener('DOMContentLoaded', () => {
             estadia: "",
             insignias: ["Embajador Local", "Turista Responsable"],
             cupones: []
+        },
+        "Admin": {
+            name: "Admin",
+            type: "admin",
+            points: 0,
+            location: "",
+            completed: 0,
+            group: false,
+            estadia: "",
+            insignias: [],
+            cupones: []
         }
     };
 
     const existingUsers = localStorage.getItem('jujuy_pass_users');
-    if (!existingUsers || !JSON.parse(existingUsers)["Mateo Garcia"]) {
+    if (!existingUsers || !JSON.parse(existingUsers)["Admin"]) {
         localStorage.setItem('jujuy_pass_users', JSON.stringify(defaultUsers));
     }
 
@@ -55,6 +66,17 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('jujuy_pass_visitas', JSON.stringify(defaultVisitas));
     }
 
+    const defaultLogs = [
+        { username: "Mateo Garcia", attraction: "Cabildo de Jujuy", points: 65, timestamp: "19/8/2026, 15:42:10" },
+        { username: "Mateo Garcia", attraction: "Parque Botánico Municipal", points: 135, timestamp: "19/8/2026, 16:15:33" },
+        { username: "Maria L.", attraction: "Eco-reporte: Limpiar Plaza", points: 100, timestamp: "19/8/2026, 17:05:00" },
+        { username: "Carlos R.", attraction: "Eco-reporte: Limpiar Plaza", points: 100, timestamp: "19/8/2026, 17:11:12" }
+    ];
+
+    if (!localStorage.getItem('jujuy_pass_logs')) {
+        localStorage.setItem('jujuy_pass_logs', JSON.stringify(defaultLogs));
+    }
+
     function getUsersDb() {
         return JSON.parse(localStorage.getItem('jujuy_pass_users'));
     }
@@ -69,6 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function saveVisitasDb(db) {
         localStorage.setItem('jujuy_pass_visitas', JSON.stringify(db));
+    }
+
+    function getLogsDb() {
+        return JSON.parse(localStorage.getItem('jujuy_pass_logs') || '[]');
+    }
+
+    function saveLogsDb(logs) {
+        localStorage.setItem('jujuy_pass_logs', JSON.stringify(logs));
     }
 
     // Estado activo
@@ -238,8 +268,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (currentUser.type === 'turista') {
                 showView('home');
-            } else {
+            } else if (currentUser.type === 'residente') {
                 showView('comunidad');
+            } else if (currentUser.type === 'admin') {
+                showView('admin');
             }
             actualizarUI();
         } else {
@@ -520,6 +552,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             saveVisitasDb(visitas);
 
+            // Registrar en el historial de validaciones en vivo
+            const logs = getLogsDb();
+            logs.push({
+                username: currentUser.name,
+                attraction: datos.titulo,
+                points: ptsGanados,
+                timestamp: new Date().toLocaleString()
+            });
+            saveLogsDb(logs);
+
             // Guardar cambios en DB local
             const db = getUsersDb();
             db[currentUser.name] = currentUser;
@@ -623,6 +665,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const db = getUsersDb();
             db[currentUser.name] = currentUser;
             saveUsersDb(db);
+
+            // Registrar en el historial de validaciones en vivo
+            const logs = getLogsDb();
+            logs.push({
+                username: currentUser.name,
+                attraction: msg,
+                points: pts,
+                timestamp: new Date().toLocaleString()
+            });
+            saveLogsDb(logs);
 
             actualizarUI();
             alert(`Acción registrada: "${msg}". Sumaste ${pts} puntos.`);
@@ -869,6 +921,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td class="py-3 text-on-surface-variant">${cat}</td>
             `;
             tablaVisitas.appendChild(tr);
+        });
+
+        // Renderizar tabla de historial de validaciones en vivo
+        const logs = getLogsDb();
+        const tablaLogs = document.getElementById('admin-historial-validaciones');
+        tablaLogs.innerHTML = '';
+
+        // Mostrar logs ordenados del más reciente al más antiguo
+        const logsSorted = [...logs].reverse();
+        logsSorted.forEach(log => {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-outline-variant';
+            tr.innerHTML = `
+                <td class="py-3 font-bold">${log.username}</td>
+                <td class="py-3 text-on-surface text-[11px]">${log.attraction}</td>
+                <td class="py-3 text-secondary font-bold">+${log.points} pts</td>
+                <td class="py-3 text-on-surface-variant font-mono text-[10px]">${log.timestamp}</td>
+            `;
+            tablaLogs.appendChild(tr);
         });
     }
 
