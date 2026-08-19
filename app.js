@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicializar base de usuarios simulada en LocalStorage
+    // 1. Inicialización de Datos Predeterminados en LocalStorage
+
     const defaultUsers = {
         "Mateo Garcia": {
             name: "Mateo Garcia",
@@ -8,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
             location: "Argentina",
             completed: 2,
             group: true,
-            estadia: "pleno", // 2 días (Pasaporte Jujuy a Pleno)
+            estadia: "pleno",
             insignias: ["Guardián del Patrimonio"],
             cupones: []
         },
@@ -47,70 +48,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const existingUsers = localStorage.getItem('jujuy_pass_users');
-    if (!existingUsers || !JSON.parse(existingUsers)["Admin"]) {
-        localStorage.setItem('jujuy_pass_users', JSON.stringify(defaultUsers));
-    }
-
-    // Inicializar base de visitas en LocalStorage
-    const defaultVisitas = {
-        "cabildo": 342,
-        "botanico": 185,
-        "corredor-sabores": 95,
-        "pachamama-ofrenda": 54,
-        "carrozas-primavera": 12,
-        "carnaval-desentierro": 8
-    };
-
-    if (!localStorage.getItem('jujuy_pass_visitas')) {
-        localStorage.setItem('jujuy_pass_visitas', JSON.stringify(defaultVisitas));
-    }
-
-    const defaultLogs = [
-        { username: "Mateo Garcia", attraction: "Cabildo de Jujuy", points: 65, timestamp: "19/8/2026, 15:42:10" },
-        { username: "Mateo Garcia", attraction: "Parque Botánico Municipal", points: 135, timestamp: "19/8/2026, 16:15:33" },
-        { username: "Maria L.", attraction: "Eco-reporte: Limpiar Plaza", points: 100, timestamp: "19/8/2026, 17:05:00" },
-        { username: "Carlos R.", attraction: "Eco-reporte: Limpiar Plaza", points: 100, timestamp: "19/8/2026, 17:11:12" }
-    ];
-
-    if (!localStorage.getItem('jujuy_pass_logs')) {
-        localStorage.setItem('jujuy_pass_logs', JSON.stringify(defaultLogs));
-    }
-
-    function getUsersDb() {
-        return JSON.parse(localStorage.getItem('jujuy_pass_users'));
-    }
-
-    function saveUsersDb(db) {
-        localStorage.setItem('jujuy_pass_users', JSON.stringify(db));
-    }
-
-    function getVisitasDb() {
-        return JSON.parse(localStorage.getItem('jujuy_pass_visitas'));
-    }
-
-    function saveVisitasDb(db) {
-        localStorage.setItem('jujuy_pass_visitas', JSON.stringify(db));
-    }
-
-    function getLogsDb() {
-        return JSON.parse(localStorage.getItem('jujuy_pass_logs') || '[]');
-    }
-
-    function saveLogsDb(logs) {
-        localStorage.setItem('jujuy_pass_logs', JSON.stringify(logs));
-    }
-
-    // Estado activo
-    let currentUser = null;
-    let recommendationAppliedBy = null;
-
-    // Preguntas para las misiones
-    const misionesData = {
+    const defaultMisiones = {
         cabildo: {
+            id: "cabildo",
             titulo: 'Cabildo de Jujuy',
             categoria: 'Historico',
+            puntos: 50,
             insignia: 'Guardián del Patrimonio',
+            descripcion: 'Visita el casco céntrico e ingresa tus respuestas patrimoniales.',
             preguntas: [
                 {
                     q: '¿En qué año se fundó el Cabildo de Jujuy?',
@@ -125,9 +70,12 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         },
         botanico: {
+            id: "botanico",
             titulo: 'Parque Botánico Municipal',
             categoria: 'Naturaleza',
+            puntos: 120,
             insignia: 'Explorador Verde',
+            descripcion: 'Completa el recorrido de senderos y avistamiento ecológico.',
             preguntas: [
                 {
                     q: '¿Qué ecosistema protege principalmente este parque?',
@@ -142,9 +90,12 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         },
         'corredor-sabores': {
+            id: "corredor-sabores",
             titulo: 'Corredor Gastronómico Paseo Pachamama',
             categoria: 'Sabores',
+            puntos: 70,
             insignia: 'Embajador Gastronómico',
+            descripcion: 'Visita el Paseo y cata una empanada o humita tradicional.',
             preguntas: [
                 {
                     q: '¿Cuál es el ingrediente base de la tradicional humita jujeña?',
@@ -154,9 +105,12 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         },
         'pachamama-ofrenda': {
+            id: "pachamama-ofrenda",
             titulo: 'Ofrenda en el Mercado 6 de Agosto',
             categoria: 'Estacional',
+            puntos: 100,
             insignia: 'Alma Jujeña',
+            descripcion: 'Visita el Mercado Municipal y participa de las actividades de ofrenda y sahumado tradicional.',
             preguntas: [
                 {
                     q: '¿En honor a quién se realiza la ofrenda del sahumado en Jujuy?',
@@ -166,9 +120,12 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         },
         'carrozas-primavera': {
+            id: "carrozas-primavera",
             titulo: 'Desfile de Carrozas en Ciudad Cultural',
             categoria: 'Estacional',
+            puntos: 100,
             insignia: 'Embajador Local',
+            descripcion: 'Completa el circuito de exposición de carrozas estudiantiles y responde las preguntas de los talleres ecológicos.',
             preguntas: [
                 {
                     q: '¿Quiénes construyen las famosas carrozas de la Fiesta Nacional de los Estudiantes?',
@@ -178,9 +135,12 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         },
         'carnaval-desentierro': {
+            id: "carnaval-desentierro",
             titulo: 'Circuito de Comparsa y Desentierro del Diablo',
             categoria: 'Estacional',
+            puntos: 100,
             insignia: 'Alma Jujeña',
+            descripcion: 'Registra tu visita a un evento tradicional de carnaval oficial en la capital y responde sobre su historia gastronómica.',
             preguntas: [
                 {
                     q: '¿Qué personaje mítico se desentierra para dar inicio a los festejos de carnaval?',
@@ -190,6 +150,66 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         }
     };
+
+    const defaultTiendas = [
+        { id: "cafe-cortesia", premio: "Café de Cortesía gratis", costo: 200, tienda: "Cafeterías", desc: "Válido en confiterías céntricas adheridas." },
+        { id: "pase-museos", premio: "Pase 2x1 en Museos", costo: 500, tienda: "Cultura", desc: "Accede a dos museos provinciales al precio de uno." },
+        { id: "souvenirs-feria", premio: "20% OFF en Souvenirs", costo: 800, tienda: "Artesanos", desc: "Descuento en ferias artesanales de la capital." }
+    ];
+
+    const defaultVisitas = {
+        "cabildo": 342,
+        "botanico": 185,
+        "corredor-sabores": 95,
+        "pachamama-ofrenda": 54,
+        "carrozas-primavera": 12,
+        "carnaval-desentierro": 8
+    };
+
+    const defaultLogs = [
+        { username: "Mateo Garcia", attraction: "Cabildo de Jujuy", points: 65, timestamp: "19/8/2026, 15:42:10" },
+        { username: "Mateo Garcia", attraction: "Parque Botánico Municipal", points: 135, timestamp: "19/8/2026, 16:15:33" },
+        { username: "Maria L.", attraction: "Eco-reporte: Limpiar Plaza", points: 100, timestamp: "19/8/2026, 17:05:00" },
+        { username: "Carlos R.", attraction: "Eco-reporte: Limpiar Plaza", points: 100, timestamp: "19/8/2026, 17:11:12" }
+    ];
+
+    // Cargar bases si no existen en LocalStorage
+    const existingUsers = localStorage.getItem('jujuy_pass_users');
+    if (!existingUsers || !JSON.parse(existingUsers)["Admin"]) {
+        localStorage.setItem('jujuy_pass_users', JSON.stringify(defaultUsers));
+    }
+
+    if (!localStorage.getItem('jujuy_pass_misiones')) {
+        localStorage.setItem('jujuy_pass_misiones', JSON.stringify(defaultMisiones));
+    }
+
+    if (!localStorage.getItem('jujuy_pass_tiendas')) {
+        localStorage.setItem('jujuy_pass_tiendas', JSON.stringify(defaultTiendas));
+    }
+
+    if (!localStorage.getItem('jujuy_pass_visitas')) {
+        localStorage.setItem('jujuy_pass_visitas', JSON.stringify(defaultVisitas));
+    }
+
+    if (!localStorage.getItem('jujuy_pass_logs')) {
+        localStorage.setItem('jujuy_pass_logs', JSON.stringify(defaultLogs));
+    }
+
+    // Helpers DB
+    function getUsersDb() { return JSON.parse(localStorage.getItem('jujuy_pass_users')); }
+    function saveUsersDb(db) { localStorage.setItem('jujuy_pass_users', JSON.stringify(db)); }
+    function getMisionesDb() { return JSON.parse(localStorage.getItem('jujuy_pass_misiones')); }
+    function saveMisionesDb(db) { localStorage.setItem('jujuy_pass_misiones', JSON.stringify(db)); }
+    function getTiendasDb() { return JSON.parse(localStorage.getItem('jujuy_pass_tiendas')); }
+    function saveTiendasDb(db) { localStorage.setItem('jujuy_pass_tiendas', JSON.stringify(db)); }
+    function getVisitasDb() { return JSON.parse(localStorage.getItem('jujuy_pass_visitas')); }
+    function saveVisitasDb(db) { localStorage.setItem('jujuy_pass_visitas', JSON.stringify(db)); }
+    function getLogsDb() { return JSON.parse(localStorage.getItem('jujuy_pass_logs') || '[]'); }
+    function saveLogsDb(logs) { localStorage.setItem('jujuy_pass_logs', JSON.stringify(logs)); }
+
+    // Estado activo
+    let currentUser = null;
+    let recommendationAppliedBy = null;
 
     // Referencias del DOM
     const modalBienvenida = document.getElementById('modal-bienvenida');
@@ -228,18 +248,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         if (season === 'pachamama') {
-            document.querySelector('.estacional-pachamama').classList.remove('hidden');
+            document.querySelectorAll('.estacional-pachamama').forEach(c => c.classList.remove('hidden'));
             adminCicloActual.innerText = 'Agosto - Pachamama';
         } else if (season === 'estudiantes') {
-            document.querySelector('.estacional-estudiantes').classList.remove('hidden');
+            document.querySelectorAll('.estacional-estudiantes').forEach(c => c.classList.remove('hidden'));
             adminCicloActual.innerText = 'Septiembre - Estudiantes';
         } else if (season === 'carnaval') {
-            document.querySelector('.estacional-carnaval').classList.remove('hidden');
+            document.querySelectorAll('.estacional-carnaval').forEach(c => c.classList.remove('hidden'));
             adminCicloActual.innerText = 'Febrero - Carnaval';
         }
     }
 
-    // Inicialización del flujo de bienvenida
+    // Flujo bienvenida / Login
     document.getElementById('btn-usuario-nuevo').addEventListener('click', () => {
         modalBienvenida.classList.add('hidden');
         modalSeleccion.classList.remove('hidden');
@@ -255,7 +275,6 @@ document.addEventListener('DOMContentLoaded', () => {
         modalBienvenida.classList.remove('hidden');
     });
 
-    // Login Form
     document.getElementById('form-login-usuario').addEventListener('submit', (e) => {
         e.preventDefault();
         const username = document.getElementById('login-username').value.trim();
@@ -275,11 +294,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             actualizarUI();
         } else {
-            alert(`Error: El usuario "${username}" no existe. Si eres nuevo, por favor regresa y registrate como usuario nuevo.`);
+            alert(`Error: El usuario "${username}" no existe. Si eres nuevo, por favor regresa y regístrate.`);
         }
     });
 
-    // Salir / Cambiar Perfil
     document.getElementById('btn-cambiar-perfil').addEventListener('click', () => {
         currentUser = null;
         recommendationAppliedBy = null;
@@ -289,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
         hideAllViews();
     });
 
-    // Botones de selección de perfil (NUEVO USUARIO)
+    // Nuevo Usuario
     document.getElementById('sel-turista').addEventListener('click', () => {
         modalSeleccion.classList.add('hidden');
         formTuristaSection.classList.remove('hidden');
@@ -305,13 +323,15 @@ document.addEventListener('DOMContentLoaded', () => {
         currentUser = {
             name: "Administrador Municipal",
             type: "admin",
-            points: 0
+            points: 0,
+            insignias: [],
+            cupones: []
         };
         showView('admin');
         actualizarUI();
     });
 
-    // Registro de Turista Nuevo (Inicia con 0 Puntos)
+    // Registro de Turista
     document.getElementById('form-perfil-turista').addEventListener('submit', (e) => {
         e.preventDefault();
         const nombre = document.getElementById('turista-nombre').value.trim();
@@ -341,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
         actualizarUI();
     });
 
-    // Registro de Residente Nuevo (Inicia con 0 Puntos)
+    // Registro de Residente
     document.getElementById('form-perfil-residente').addEventListener('submit', (e) => {
         e.preventDefault();
         const nombre = document.getElementById('residente-nombre').value.trim();
@@ -364,12 +384,12 @@ document.addEventListener('DOMContentLoaded', () => {
         saveUsersDb(db);
 
         formResidenteSection.classList.add('hidden');
-        alert(`Registro exitoso. Bienvenido vecino, ${nombre}. Comienzas con 0 puntos.`);
+        alert(`Registro exitoso. Bienvenido, ${nombre}. Comienzas con 0 puntos.`);
         showView('comunidad');
         actualizarUI();
     });
 
-    // Navegación de pestañas
+    // Navegación Pestañas
     const navItems = [navHome, navMisiones, navComunidad, navAdmin];
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
@@ -388,7 +408,6 @@ document.addEventListener('DOMContentLoaded', () => {
         viewMisiones.classList.add('hidden');
         viewComunidad.classList.add('hidden');
         viewAdmin.classList.add('hidden');
-        
         navItems.forEach(nav => {
             nav.classList.remove('text-secondary', 'font-bold');
             nav.classList.add('text-on-surface-variant');
@@ -402,14 +421,13 @@ document.addEventListener('DOMContentLoaded', () => {
             activeNav.classList.remove('text-on-surface-variant');
             activeNav.classList.add('text-secondary', 'font-bold');
         }
-
         if (path === 'home') viewHome.classList.remove('hidden');
         if (path === 'misiones') viewMisiones.classList.remove('hidden');
         if (path === 'comunidad') viewComunidad.classList.remove('hidden');
         if (path === 'admin') viewAdmin.classList.remove('hidden');
     }
 
-    // Toggle Vista Lista/Mapa en Misiones
+    // Toggle Vista Lista/Mapa Misiones
     const btnToggleList = document.getElementById('btn-toggle-list');
     const btnToggleMap = document.getElementById('btn-toggle-map');
     const listContainer = document.getElementById('misiones-list-container');
@@ -433,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mapContainer.classList.remove('hidden');
     });
 
-    // Iniciar misión y abrir cuestionario
+    // Cuestionario Modal Misión
     const modalMision = document.getElementById('modal-mision-preguntas');
     const containerPreguntas = document.getElementById('preguntas-contenedor');
     const tituloPreguntas = document.getElementById('mision-pregunta-titulo');
@@ -447,7 +465,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function cargarPreguntas(id, pts) {
-        const datos = misionesData[id];
+        const misiones = getMisionesDb();
+        const datos = misiones[id];
         if (!datos) return;
 
         tituloPreguntas.innerText = `Validar: ${datos.titulo}`;
@@ -486,12 +505,13 @@ document.addEventListener('DOMContentLoaded', () => {
         modalMision.classList.remove('hidden');
     }
 
-    // Submit del cuestionario de misión (Valida respuestas y desglosa puntos detallados)
+    // Submit Cuestionario (Guarda en Logs y Visitas)
     document.getElementById('form-verificar-preguntas').addEventListener('submit', (e) => {
         e.preventDefault();
         const id = document.getElementById('modal-mision-id').value;
         const basePts = parseInt(document.getElementById('modal-mision-puntos-val').value);
-        const datos = misionesData[id];
+        const misiones = getMisionesDb();
+        const datos = misiones[id];
         
         let correctas = true;
         datos.preguntas.forEach((pregunta, index) => {
@@ -502,10 +522,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (correctas) {
-            // Desglose de puntos según PDF:
-            // Visitar y validar atractivo: +10 pts
-            // Responder correctamente: +10 pts
-            // Completar misión: +30 pts (Total base = 50 pts, o el valor de basePts especificado)
             const visitaPts = 10;
             const respuestasPts = 10;
             const completarMisionPts = basePts - 20 > 0 ? basePts - 20 : 30;
@@ -513,18 +529,15 @@ document.addEventListener('DOMContentLoaded', () => {
             let ptsGanados = visitaPts + respuestasPts + completarMisionPts;
             let desgloseMsg = `Visita (+${visitaPts}) + Respuestas (+${respuestasPts}) + Misión (+${completarMisionPts})`;
 
-            // Asignar bono de grupo si aplica
             if (currentUser.group) {
                 ptsGanados += 15;
                 desgloseMsg += ` + Bono Grupal (+15)`;
             }
 
-            // Asignar bono de recomendación de residente
             if (recommendationAppliedBy) {
                 ptsGanados += 50;
                 desgloseMsg += ` + Recomendación Cruzada (+50)`;
                 
-                // Dar puntos al residente que recomendó
                 const db = getUsersDb();
                 if (db[recommendationAppliedBy]) {
                     db[recommendationAppliedBy].points += 50;
@@ -537,22 +550,15 @@ document.addEventListener('DOMContentLoaded', () => {
             currentUser.points += ptsGanados;
             currentUser.completed += 1;
 
-            // Asignar insignia por la categoría
             if (datos.insignia && !currentUser.insignias.includes(datos.insignia)) {
                 currentUser.insignias.push(datos.insignia);
-                alert(`¡Has ganado la insignia: "${datos.insignia}" por tu contribución!`);
+                alert(`¡Has ganado la insignia: "${datos.insignia}"!`);
             }
 
-            // Registrar visita en estadísticas
             const visitas = getVisitasDb();
-            if (visitas[id] !== undefined) {
-                visitas[id] += 1;
-            } else {
-                visitas[id] = 1;
-            }
+            visitas[id] = (visitas[id] || 0) + 1;
             saveVisitasDb(visitas);
 
-            // Registrar en el historial de validaciones en vivo
             const logs = getLogsDb();
             logs.push({
                 username: currentUser.name,
@@ -562,92 +568,70 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             saveLogsDb(logs);
 
-            // Guardar cambios en DB local
             const db = getUsersDb();
             db[currentUser.name] = currentUser;
             saveUsersDb(db);
             
             actualizarUI();
             modalMision.classList.add('hidden');
-            
-            // Cambiar estado del botón de la misión
-            const btn = document.querySelector(`button[data-id="${id}"]`);
-            if (btn) {
-                btn.disabled = true;
-                btn.innerText = 'Completada';
-                btn.className = 'mt-3 px-4 py-2.5 bg-outline-variant text-outline rounded-xl text-xs font-bold self-start cursor-default';
-            }
-
-            alert(`¡Respuestas Correctas!\nPuntos sumados: ${desgloseMsg} = +${ptsGanados} pts.`);
+            alert(`Misión completada. Puntos sumados: ${desgloseMsg} = +${ptsGanados} pts.`);
         } else {
-            alert('Respuestas incorrectas. Por favor lee la cartelería informativa e intenta de nuevo.');
+            alert('Respuestas incorrectas. Inténtalo de nuevo.');
         }
     });
 
-    // Tienda de Recompensas (Canjear puntos por cupones)
-    const btnsCanjear = document.querySelectorAll('.btn-canjear');
-    btnsCanjear.forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (!currentUser) return;
-            
-            const costo = parseInt(btn.getAttribute('data-costo'));
-            const premio = btn.getAttribute('data-premio');
+    // Canje de Recompensas
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('btn-canjear')) {
+            const costo = parseInt(e.target.getAttribute('data-costo'));
+            const premio = e.target.getAttribute('data-premio');
 
             if (currentUser.points >= costo) {
                 currentUser.points -= costo;
-                
-                // Generar cupón al azar
                 const codigoCupon = `CUPON-${premio.toUpperCase().substring(0, 3)}-${Math.floor(1000 + Math.random() * 9000)}`;
                 currentUser.cupones.push(`${premio} (${codigoCupon})`);
 
-                // Guardar cambios en DB local
                 const db = getUsersDb();
                 db[currentUser.name] = currentUser;
                 saveUsersDb(db);
 
                 actualizarUI();
-                alert(`Canje exitoso. Obtuviste el cupón: ${codigoCupon}`);
+                alert(`Canje exitoso. Código de cupón: ${codigoCupon}`);
             } else {
-                alert(`Puntos insuficientes. Necesitas ${costo} puntos para este beneficio.`);
+                alert(`Puntos insuficientes. Requieres ${costo} puntos.`);
             }
-        });
+        }
     });
 
-    // Aplicar código de recomendación de residente en perfil turista
+    // Recomendación Residente -> Turista
     btnApplyRecommend.addEventListener('click', () => {
         const cod = inputCodeRecommend.value.trim();
         const db = getUsersDb();
 
         if (db[cod] && db[cod].type === 'residente') {
             recommendationAppliedBy = cod;
-            recommendStatusMsg.innerText = `Recomendación válida de: ${cod}. Se acreditarán 50 pts extra en tu próxima misión completada.`;
+            recommendStatusMsg.innerText = `Recomendación válida de: ${cod}. Bono de +50 pts listo para tu siguiente misión.`;
             recommendStatusMsg.classList.remove('hidden', 'text-error');
             recommendStatusMsg.classList.add('text-secondary');
         } else {
-            recommendStatusMsg.innerText = `El residente "${cod}" no se encuentra registrado en el sistema.`;
+            recommendStatusMsg.innerText = `Residente "${cod}" no registrado.`;
             recommendStatusMsg.classList.remove('hidden', 'text-secondary');
             recommendStatusMsg.classList.add('text-error');
         }
     });
 
-    // Generar código de recomendación en perfil Residente
     document.getElementById('btn-generar-recomendar').addEventListener('click', () => {
         const lugar = document.getElementById('residente-lugar-recomendar').value.trim();
         if (!lugar) {
-            alert('Por favor escribe el nombre del lugar a recomendar.');
+            alert('Ingresa el lugar a recomendar.');
             return;
         }
-
-        const box = document.getElementById('box-codigo-generado');
-        const codeSpan = document.getElementById('codigo-generado');
-        
-        codeSpan.innerText = currentUser.name;
-        box.classList.remove('hidden');
-        
-        alert(`Comparte tu nombre de usuario "${currentUser.name}" con el turista para que ambos sumen puntos.`);
+        document.getElementById('codigo-generado').innerText = currentUser.name;
+        document.getElementById('box-codigo-generado').classList.remove('hidden');
+        alert(`Comparte tu usuario "${currentUser.name}" con el turista.`);
     });
 
-    // Acciones generales de residente
+    // Acciones Residente
     const btnsComunidadAccion = document.querySelectorAll('.btn-residente-accion');
     btnsComunidadAccion.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -655,18 +639,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const msg = btn.getAttribute('data-msg');
             currentUser.points += pts;
             
-            // Asignar insignia de embajador si pasa los 3000 puntos
             if (currentUser.points >= 3000 && !currentUser.insignias.includes("Embajador Local")) {
                 currentUser.insignias.push("Embajador Local");
-                alert("¡Felicidades! Has sido nombrado Embajador Local de Jujuy por tu nivel de participación.");
+                alert("¡Eres Embajador Local de Jujuy!");
             }
 
-            // Guardar cambios en DB local
             const db = getUsersDb();
             db[currentUser.name] = currentUser;
             saveUsersDb(db);
 
-            // Registrar en el historial de validaciones en vivo
             const logs = getLogsDb();
             logs.push({
                 username: currentUser.name,
@@ -681,109 +662,225 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Simular Escaneo General
     document.getElementById('btn-scan-qr').addEventListener('click', () => {
-        alert('Simulador de escaneo: escanea un código QR en el Cabildo o Parque Botánico abriendo la pestaña de Misiones.');
+        alert('Simulador de escaneo: escanea un código QR en misiones.');
         showView('misiones');
     });
 
-    // Formulario de administración (agregar misiones)
-    document.getElementById('form-nueva-mision').addEventListener('submit', (e) => {
+    // 2. Lógica Administrativa CRUD
+
+    // Navegar entre sub-pestañas del Administrador
+    window.switchAdminTab = function(tabName) {
+        document.getElementById('admin-subtab-metrics').classList.add('hidden');
+        document.getElementById('admin-subtab-misiones').classList.add('hidden');
+        document.getElementById('admin-subtab-usuarios').classList.add('hidden');
+        document.getElementById('admin-subtab-tiendas').classList.add('hidden');
+
+        document.getElementById(`admin-subtab-${tabName}`).classList.remove('hidden');
+        document.getElementById(`admin-subtab-${tabName}`).classList.add('flex');
+
+        document.querySelectorAll('[id^="subtab-btn-"]').forEach(btn => {
+            btn.className = 'px-4 py-2 text-xs font-bold bg-surface-container text-on-surface-variant rounded-xl';
+        });
+        document.getElementById(`subtab-btn-${tabName}`).className = 'px-4 py-2 text-xs font-bold bg-primary text-on-primary rounded-xl';
+    };
+
+    // FORMULARIO: Crear / Editar Misión
+    const formNuevaMision = document.getElementById('form-nueva-mision');
+    formNuevaMision.addEventListener('submit', (e) => {
         e.preventDefault();
+        const editId = document.getElementById('edit-mision-id').value;
         const nombre = document.getElementById('admin-mision-nombre').value.trim();
         const categoria = document.getElementById('admin-mision-cat').value;
         const puntos = parseInt(document.getElementById('admin-mision-puntos').value);
-        const id = nombre.toLowerCase().replace(/\s+/g, '-');
+        const db = getMisionesDb();
 
-        misionesData[id] = {
+        const id = editId ? editId : nombre.toLowerCase().replace(/\s+/g, '-');
+
+        db[id] = {
+            id: id,
             titulo: nombre,
             categoria: categoria,
+            puntos: puntos,
             insignia: categoria === 'Historico' ? 'Guardián del Patrimonio' : 'Explorador Verde',
-            preguntas: [
+            descripcion: editId ? (db[editId].descripcion || '') : 'Misión agregada por la Municipalidad.',
+            preguntas: editId ? (db[editId].preguntas || [
                 {
-                    q: 'Pregunta de validación rápida para esta nueva ubicación:',
-                    options: ['Opción correcta (Verdadero)', 'Opción incorrecta (Falso)'],
-                    correct: 'Opción correcta (Verdadero)'
+                    q: 'Pregunta de validación rápida:',
+                    options: ['Correcto', 'Incorrecto'],
+                    correct: 'Correcto'
+                }
+            ]) : [
+                {
+                    q: 'Pregunta de validación rápida:',
+                    options: ['Correcto', 'Incorrecto'],
+                    correct: 'Correcto'
                 }
             ]
         };
 
-        // Registrar en estadísticas de visitas iniciales
-        const visitas = getVisitasDb();
-        visitas[id] = 0;
-        saveVisitasDb(visitas);
-
-        // Renderizar nueva tarjeta de misión
-        const list = document.getElementById('misiones-list-container');
-        const colorBar = categoria === 'Historico' ? 'bg-secondary' : (categoria === 'Naturaleza' ? 'bg-tertiary-fixed-dim' : 'bg-error');
-        const badgeColor = categoria === 'Historico' ? 'text-secondary bg-secondary/10' : 'text-tertiary-container bg-tertiary-fixed/30';
+        saveMisionesDb(db);
         
-        const card = document.createElement('div');
-        card.className = 'flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant p-4';
-        card.innerHTML = `
-            <div class="absolute left-0 top-0 bottom-0 w-1 ${colorBar}"></div>
-            <div class="flex flex-col flex-1 gap-xs ml-2">
-                <div class="flex justify-between items-start">
-                    <span class="text-label-sm font-label-sm ${badgeColor} px-3 py-1 rounded-full">${categoria}</span>
-                    <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+${puntos} pts</span>
-                </div>
-                <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-3">${nombre}</h3>
-                <p class="text-xs text-on-surface-variant mt-1">Nueva misión agregada desde el panel administrativo.</p>
-                <button class="btn-mision-activar mt-3 px-4 py-2.5 bg-secondary text-on-secondary rounded-xl text-xs font-bold self-start" data-id="${id}" data-puntos="${puntos}">
-                    Iniciar Misión
-                </button>
-            </div>
-        `;
+        // Resetear formulario
+        formNuevaMision.reset();
+        document.getElementById('edit-mision-id').value = '';
+        document.getElementById('admin-mision-form-title').innerText = 'Agregar Nueva Misión / Atractivo';
+        document.getElementById('admin-mision-btn-submit').innerText = 'Publicar Misión';
+        document.getElementById('admin-mision-btn-cancel').classList.add('hidden');
 
-        list.appendChild(card);
-        alert('Nueva misión agregada exitosamente.');
-        document.getElementById('form-nueva-mision').reset();
+        alert(editId ? 'Misión editada con éxito.' : 'Nueva misión publicada.');
         actualizarUI();
     });
 
-    // Actualizar la interfaz basada en el usuario activo
+    document.getElementById('admin-mision-btn-cancel').addEventListener('click', () => {
+        formNuevaMision.reset();
+        document.getElementById('edit-mision-id').value = '';
+        document.getElementById('admin-mision-form-title').innerText = 'Agregar Nueva Misión / Atractivo';
+        document.getElementById('admin-mision-btn-submit').innerText = 'Publicar Misión';
+        document.getElementById('admin-mision-btn-cancel').classList.add('hidden');
+    });
+
+    // Misiones CRUD Acciones (Editar/Eliminar)
+    window.editarMision = function(id) {
+        const db = getMisionesDb();
+        const mision = db[id];
+        if (!mision) return;
+
+        document.getElementById('edit-mision-id').value = id;
+        document.getElementById('admin-mision-nombre').value = mision.titulo;
+        document.getElementById('admin-mision-cat').value = mision.categoria;
+        document.getElementById('admin-mision-puntos').value = mision.puntos;
+
+        document.getElementById('admin-mision-form-title').innerText = 'Editar Misión';
+        document.getElementById('admin-mision-btn-submit').innerText = 'Guardar Cambios';
+        document.getElementById('admin-mision-btn-cancel').classList.remove('hidden');
+
+        // Scroll al formulario
+        document.getElementById('admin-mision-form-title').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    window.eliminarMision = function(id) {
+        if (!confirm('¿Seguro de que deseas eliminar esta misión?')) return;
+        const db = getMisionesDb();
+        delete db[id];
+        saveMisionesDb(db);
+        actualizarUI();
+    };
+
+    // FORMULARIO: Agregar Usuario Admin
+    document.getElementById('form-nuevo-usuario-admin').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nombre = document.getElementById('admin-user-nombre').value.trim();
+        const rol = document.getElementById('admin-user-rol').value;
+        const puntos = parseInt(document.getElementById('admin-user-puntos').value);
+
+        const db = getUsersDb();
+        if (db[nombre]) {
+            alert('El nombre de usuario ya existe.');
+            return;
+        }
+
+        db[nombre] = {
+            name: nombre,
+            type: rol,
+            points: puntos,
+            location: rol === 'turista' ? 'Jujuy, Argentina' : '',
+            barrio: rol === 'residente' ? 'Barrio Centro' : '',
+            completed: 0,
+            group: false,
+            estadia: rol === 'turista' ? 'pleno' : '',
+            insignias: [],
+            cupones: []
+        };
+
+        saveUsersDb(db);
+        document.getElementById('form-nuevo-usuario-admin').reset();
+        alert('Usuario registrado exitosamente.');
+        actualizarUI();
+    });
+
+    window.eliminarUsuario = function(username) {
+        if (username === 'Admin') {
+            alert('No puedes eliminar al usuario administrador principal.');
+            return;
+        }
+        if (!confirm(`¿Seguro de que deseas eliminar al usuario "${username}"?`)) return;
+        const db = getUsersDb();
+        delete db[username];
+        saveUsersDb(db);
+        actualizarUI();
+    };
+
+    // FORMULARIO: Agregar Tienda / Recompensa
+    document.getElementById('form-nuevo-premio').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nombre = document.getElementById('admin-premio-nombre').value.trim();
+        const tienda = document.getElementById('admin-premio-tienda').value.trim();
+        const costo = parseInt(document.getElementById('admin-premio-costo').value);
+        const desc = document.getElementById('admin-premio-desc').value.trim();
+
+        const db = getTiendasDb();
+        const id = nombre.toLowerCase().replace(/\s+/g, '-');
+
+        db.push({
+            id: id,
+            premio: nombre,
+            costo: costo,
+            tienda: tienda,
+            desc: desc
+        });
+
+        saveTiendasDb(db);
+        document.getElementById('form-nuevo-premio').reset();
+        alert('Premio y comercio adheridos con éxito.');
+        actualizarUI();
+    });
+
+    window.eliminarPremio = function(id) {
+        if (!confirm('¿Seguro de eliminar este beneficio?')) return;
+        let db = getTiendasDb();
+        db = db.filter(item => item.id !== id);
+        saveTiendasDb(db);
+        actualizarUI();
+    };
+
+    // 3. Actualización de Interfaz e Interacción Dinámica
+
     function actualizarUI() {
         if (!currentUser) return;
 
-        // Actualizar saludo y pasaporte
+        const db = getUsersDb();
+        const misiones = getMisionesDb();
+        const tiendas = getTiendasDb();
+        const visitas = getVisitasDb();
+        const logs = getLogsDb();
+
+        // Saludo y Pasaporte
         document.getElementById('saludo-usuario').innerText = currentUser.name;
         document.getElementById('passport-username').innerText = currentUser.name;
         
         const pLoc = document.getElementById('passport-location');
         const subtPasaporte = document.getElementById('subt-pasaporte');
 
-        // Cálculo dinámico de progreso del pasaporte según su estadía (Cambiante de verdad)
-        let totalMisionesObjetivo = 4; // Explorador por defecto
+        let totalMisionesObjetivo = 4;
         if (currentUser.type === 'turista') {
             pLoc.innerText = currentUser.location || 'Argentina';
-            
             let tipoPass = "Pasaporte Explorador (1 día)";
-            if (currentUser.estadia === "express") {
-                tipoPass = "Pasaporte Express (Mediodía)";
-                totalMisionesObjetivo = 2;
-            }
-            if (currentUser.estadia === "pleno") {
-                tipoPass = "Pasaporte Jujuy a Pleno (2 días)";
-                totalMisionesObjetivo = 6;
-            }
-            if (currentUser.estadia === "sinprisa") {
-                tipoPass = "Pasaporte Jujuy Sin Prisa (3+ días)";
-                totalMisionesObjetivo = 8;
-            }
-            
+            if (currentUser.estadia === "express") { tipoPass = "Pasaporte Express (Mediodía)"; totalMisionesObjetivo = 2; }
+            if (currentUser.estadia === "pleno") { tipoPass = "Pasaporte Jujuy a Pleno (2 días)"; totalMisionesObjetivo = 6; }
+            if (currentUser.estadia === "sinprisa") { tipoPass = "Pasaporte Jujuy Sin Prisa (3+ días)"; totalMisionesObjetivo = 8; }
             subtPasaporte.innerText = `Tu pasaporte: ${tipoPass}`;
             document.getElementById('tourist-recommendation-box').classList.remove('hidden');
         } else {
             pLoc.innerText = currentUser.barrio || 'San Salvador de Jujuy';
             subtPasaporte.innerText = "Perfil de Comunidad Residente";
             document.getElementById('tourist-recommendation-box').classList.add('hidden');
-            totalMisionesObjetivo = 10; // Objetivo residente de acciones comunitarias
+            totalMisionesObjetivo = 10;
         }
 
         document.getElementById('animated-points').innerText = currentUser.points;
         document.getElementById('misiones-contador').innerText = currentUser.completed;
 
-        // Mostrar / ocultar bono de grupo
         if (currentUser.group) {
             document.getElementById('bonus-banner').classList.remove('hidden');
         } else {
@@ -819,34 +916,73 @@ document.addEventListener('DOMContentLoaded', () => {
             cuponesBox.classList.add('hidden');
         }
 
-        // Nivel e información de progreso dinámico del pasaporte
+        // Rango / Progreso
         let nivelText = "Novato";
         if (currentUser.points >= 500 && currentUser.points < 1500) nivelText = "Explorador";
         if (currentUser.points >= 1500) nivelText = "Experto / Embajador";
-
         document.getElementById('recompensa-sig-lbl').innerText = `Nivel actual: ${nivelText}`;
 
-        // Porcentaje real dinámico de misiones completadas respecto al objetivo del pasaporte
         let porcentajeMisiones = Math.round((currentUser.completed / totalMisionesObjetivo) * 100);
         if (porcentajeMisiones > 100) porcentajeMisiones = 100;
-        
         document.getElementById('porcentaje-pasaporte-lbl').innerText = `${porcentajeMisiones}%`;
         document.getElementById('barra-progreso').style.width = `${porcentajeMisiones}%`;
         
-        // Puntos faltantes para siguiente rango
         let restantes = 1500 - currentUser.points;
         if (restantes < 0) restantes = 0;
         document.getElementById('pts-faltantes').innerText = `${restantes} pts para el siguiente nivel`;
 
-        // Renderizar tabla de posiciones en vivo (Comunidad)
-        const db = getUsersDb();
+        // Renderizar Tienda de Recompensas de forma dinámica
+        const tiendaContainer = document.getElementById('tienda-recompensas-container');
+        tiendaContainer.innerHTML = '';
+        tiendas.forEach(t => {
+            const card = document.createElement('div');
+            card.className = 'bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm flex flex-col justify-between gap-md';
+            card.innerHTML = `
+                <div>
+                    <span class="text-xs bg-secondary/10 text-secondary font-bold px-3 py-1 rounded-full">${t.tienda}</span>
+                    <h4 class="font-bold text-on-surface text-sm mt-3">${t.premio}</h4>
+                    <p class="text-xs text-on-surface-variant mt-2">${t.desc}</p>
+                </div>
+                <button class="btn-canjear w-full py-3 bg-primary text-on-primary text-xs font-bold rounded-xl mt-2 hover:bg-primary-container" data-costo="${t.costo}" data-premio="${t.premio}">
+                    Canjear (${t.costo} pts)
+                </button>
+            `;
+            tiendaContainer.appendChild(card);
+        });
+
+        // Renderizar Lista de Misiones de forma dinámica
+        const misionesContainer = document.getElementById('misiones-list-container');
+        misionesContainer.innerHTML = '';
+        Object.values(misiones).forEach(m => {
+            const isEstacional = m.categoria === 'Estacional';
+            const hideClass = isEstacional ? 'mision-card estacional hidden' : '';
+            const colorBar = m.categoria === 'Historico' ? 'bg-secondary' : (m.categoria === 'Naturaleza' ? 'bg-tertiary-fixed-dim' : 'bg-primary-container');
+            const badgeColor = m.categoria === 'Historico' ? 'text-secondary bg-secondary/10' : 'text-tertiary-container bg-tertiary-fixed/30';
+            
+            const card = document.createElement('div');
+            card.className = `${hideClass} flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant p-4`;
+            card.innerHTML = `
+                <div class="absolute left-0 top-0 bottom-0 w-1 ${colorBar}"></div>
+                <div class="flex flex-col flex-1 gap-xs ml-2">
+                    <div class="flex justify-between items-start">
+                        <span class="text-xs font-bold px-3 py-1 rounded-full ${badgeColor}">${m.categoria}</span>
+                        <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+${m.puntos} pts</span>
+                    </div>
+                    <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-3">${m.titulo}</h3>
+                    <p class="text-xs text-on-surface-variant mt-1">${m.descripcion}</p>
+                    <button class="btn-mision-activar mt-3 px-4 py-2.5 bg-secondary text-on-secondary rounded-xl text-xs font-bold self-start" data-id="${m.id}" data-puntos="${m.puntos}">
+                        Iniciar Misión
+                    </button>
+                </div>
+            `;
+            misionesContainer.appendChild(card);
+        });
+        actualizarVisibilidadMisionesEstacionales(seasonSelector.value);
+
+        // Leaderboard Comunidad
         const leaderboard = document.getElementById('leaderboard-ranking');
         leaderboard.innerHTML = '';
-        
-        const residentes = Object.values(db)
-            .filter(u => u.type === 'residente')
-            .sort((a, b) => b.points - a.points);
-        
+        const residentes = Object.values(db).filter(u => u.type === 'residente').sort((a, b) => b.points - a.points);
         residentes.forEach((res, index) => {
             const div = document.createElement('div');
             div.className = `flex items-center gap-md p-md ${index < residentes.length - 1 ? 'border-b border-outline-variant' : ''}`;
@@ -861,11 +997,10 @@ document.addEventListener('DOMContentLoaded', () => {
             leaderboard.appendChild(div);
         });
 
-        // Actualizar datos de administración
+        // panel de administración: Métricas generales
         const totalUsuarios = Object.keys(db).length;
         document.getElementById('admin-total-usuarios').innerText = totalUsuarios;
 
-        // Calcular promedio de estadía
         const turistas = Object.values(db).filter(u => u.type === 'turista');
         let sumaDias = 0;
         turistas.forEach(t => {
@@ -877,24 +1012,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const promedio = turistas.length > 0 ? (sumaDias / turistas.length).toFixed(1) : 0;
         document.getElementById('admin-promedio-estadia').innerText = `${promedio} días`;
 
-        // Renderizar Gráfico de barras interactivo de administración
-        const visitas = getVisitasDb();
+        // Renderizar gráfico de visitas (estadísticas)
         const adminGrafico = document.getElementById('admin-grafico-barras');
         adminGrafico.innerHTML = '';
-
-        // Obtener el valor máximo para escalar las barras del gráfico al 100%
-        const maxVisitas = Math.max(...Object.values(visitas), 1);
-
-        Object.entries(visitas).forEach(([misionId, count]) => {
-            const mData = misionesData[misionId];
-            const titulo = mData ? mData.titulo : misionId;
+        const maxVisitas = Math.max(...Object.keys(misiones).map(id => visitas[id] || 0), 1);
+        
+        Object.values(misiones).forEach(m => {
+            const count = visitas[m.id] || 0;
             const porcentajeBarra = Math.round((count / maxVisitas) * 100);
-
             const barContainer = document.createElement('div');
             barContainer.className = 'flex flex-col gap-1 w-full';
             barContainer.innerHTML = `
                 <div class="flex justify-between text-xs font-bold text-on-surface">
-                    <span>${titulo}</span>
+                    <span>${m.titulo}</span>
                     <span>${count} visitas</span>
                 </div>
                 <div class="w-full h-3.5 bg-surface-variant rounded-full overflow-hidden border border-outline-variant">
@@ -904,31 +1034,24 @@ document.addEventListener('DOMContentLoaded', () => {
             adminGrafico.appendChild(barContainer);
         });
 
-        // Renderizar tabla de visitas de administrador
+        // Renderizar tabla de validaciones de administrador
         const tablaVisitas = document.getElementById('admin-tabla-visitas');
         tablaVisitas.innerHTML = '';
-        
-        Object.entries(visitas).forEach(([misionId, count]) => {
-            const mData = misionesData[misionId];
-            const titulo = mData ? mData.titulo : misionId;
-            const cat = mData ? mData.categoria : "Personalizado";
-            
+        Object.values(misiones).forEach(m => {
+            const count = visitas[m.id] || 0;
             const tr = document.createElement('tr');
             tr.className = 'border-b border-outline-variant';
             tr.innerHTML = `
-                <td class="py-3 font-bold">${titulo}</td>
+                <td class="py-3 font-bold">${m.titulo}</td>
                 <td class="py-3 text-primary font-bold">${count} visitas</td>
-                <td class="py-3 text-on-surface-variant">${cat}</td>
+                <td class="py-3 text-on-surface-variant">${m.categoria}</td>
             `;
             tablaVisitas.appendChild(tr);
         });
 
-        // Renderizar tabla de historial de validaciones en vivo
-        const logs = getLogsDb();
+        // Renderizar tabla de validaciones en vivo
         const tablaLogs = document.getElementById('admin-historial-validaciones');
         tablaLogs.innerHTML = '';
-
-        // Mostrar logs ordenados del más reciente al más antiguo
         const logsSorted = [...logs].reverse();
         logsSorted.forEach(log => {
             const tr = document.createElement('tr');
@@ -941,8 +1064,60 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             tablaLogs.appendChild(tr);
         });
+
+        // CRUD ADMIN: Tabla de Misiones
+        const crudMisionesTbody = document.getElementById('admin-crud-misiones-tbody');
+        crudMisionesTbody.innerHTML = '';
+        Object.values(misiones).forEach(m => {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-outline-variant';
+            tr.innerHTML = `
+                <td class="py-3 font-bold">${m.titulo}</td>
+                <td class="py-3 text-on-surface-variant">${m.categoria}</td>
+                <td class="py-3 text-primary font-bold">${m.puntos} pts</td>
+                <td class="py-3 flex gap-sm">
+                    <button class="px-2 py-1 bg-secondary text-on-secondary rounded text-[10px] font-bold" onclick="editarMision('${m.id}')">Editar</button>
+                    <button class="px-2 py-1 bg-primary text-on-primary rounded text-[10px] font-bold" onclick="eliminarMision('${m.id}')">Eliminar</button>
+                </td>
+            `;
+            crudMisionesTbody.appendChild(tr);
+        });
+
+        // CRUD ADMIN: Tabla de Usuarios
+        const crudUsuariosTbody = document.getElementById('admin-crud-usuarios-tbody');
+        crudUsuariosTbody.innerHTML = '';
+        Object.values(db).forEach(u => {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-outline-variant';
+            tr.innerHTML = `
+                <td class="py-3 font-bold">${u.name}</td>
+                <td class="py-3 text-on-surface-variant uppercase text-[10px] font-bold">${u.type}</td>
+                <td class="py-3 text-primary font-bold">${u.points} pts</td>
+                <td class="py-3">
+                    <button class="px-2 py-1 bg-primary text-on-primary rounded text-[10px] font-bold" onclick="eliminarUsuario('${u.name}')">Eliminar</button>
+                </td>
+            `;
+            crudUsuariosTbody.appendChild(tr);
+        });
+
+        // CRUD ADMIN: Tabla de Tiendas
+        const crudTiendasTbody = document.getElementById('admin-crud-tiendas-tbody');
+        crudTiendasTbody.innerHTML = '';
+        tiendas.forEach(t => {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-outline-variant';
+            tr.innerHTML = `
+                <td class="py-3 font-bold">${t.premio}</td>
+                <td class="py-3 text-on-surface-variant">${t.tienda}</td>
+                <td class="py-3 text-primary font-bold">${t.costo} pts</td>
+                <td class="py-3">
+                    <button class="px-2 py-1 bg-primary text-on-primary rounded text-[10px] font-bold" onclick="eliminarPremio('${t.id}')">Eliminar</button>
+                </td>
+            `;
+            crudTiendasTbody.appendChild(tr);
+        });
     }
 
-    // Inicializar visualización de temporada por defecto (Pachamama - Agosto)
-    actualizarVisibilidadMisionesEstacionales('pachamama');
+    // Inicializar por defecto
+    actualizarUI();
 });

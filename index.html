@@ -108,11 +108,10 @@
 </head>
 <body class="bg-surface font-body-md text-on-surface">
 
-    <!-- Header Global (Con altura incrementada y logo x2 más grande) -->
+    <!-- Header Global -->
     <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.06)] border-b border-outline-variant">
         <div class="h-24 max-w-5xl mx-auto px-margin-mobile flex items-center justify-between">
             <div class="flex items-center gap-md">
-                <!-- Logo x2 más grande (h-16 en lugar de h-8) -->
                 <img src="logo.webp" alt="Jujuy Ciudad Pass Logo" class="h-16 w-auto object-contain"/>
                 <div class="flex flex-col">
                     <span class="font-headline-md text-body-lg text-primary tracking-tight font-bold leading-tight">JUJUY</span>
@@ -213,7 +212,7 @@
         </div>
     </div>
 
-    <!-- Contenido Principal (Con padding-top de h-28 para móvil espacioso) -->
+    <!-- Contenido Principal -->
     <main class="relative w-full pt-28 pb-32 min-h-screen max-w-5xl mx-auto px-margin-mobile flex flex-col gap-xl">
 
         <!-- Formulario Personalización Turista Nuevo -->
@@ -284,7 +283,7 @@
                 <p id="subt-pasaporte" class="font-body-md text-on-surface-variant text-sm font-semibold">Tu pasaporte: Pasaporte Explorador</p>
             </div>
 
-            <!-- Tarjeta Pasaporte Digital (Estilo Andes Moderno) -->
+            <!-- Tarjeta Pasaporte Digital -->
             <div class="relative w-full rounded-3xl bg-primary shadow-xl overflow-hidden active:scale-[0.98] transition-transform duration-300">
                 <div class="absolute top-0 right-0 w-64 h-64 bg-primary-container rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
                 <div class="absolute bottom-0 left-0 w-48 h-48 bg-secondary rounded-full blur-3xl opacity-20 translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
@@ -305,7 +304,6 @@
                         </div>
                     </div>
                     
-                    <!-- Puntos e Insignias -->
                     <div class="flex justify-between items-end mt-sm flex-wrap gap-md">
                         <div class="flex flex-col gap-xs">
                             <span class="font-label-sm text-primary-fixed-dim uppercase tracking-wide text-xs">Puntos Acumulados</span>
@@ -315,7 +313,6 @@
                             </div>
                         </div>
                         
-                        <!-- Contenedor de Insignias ganadas -->
                         <div class="flex flex-col items-end gap-1.5">
                             <span class="font-label-sm text-primary-fixed-dim uppercase tracking-wide text-xs">Insignias</span>
                             <div id="insignias-contenedor" class="flex gap-2 flex-wrap justify-end">
@@ -338,7 +335,7 @@
             </div>
 
             <!-- Enter Recommendation Code -->
-            <div id="tourist-recommendation-box" class="bg-surface-container rounded-3xl p-6 shadow-sm border border-outline-variant flex flex-col gap-sm">
+            <div id="tourist-recommendation-box" class="hidden bg-surface-container rounded-3xl p-6 shadow-sm border border-outline-variant flex flex-col gap-sm">
                 <span class="font-label-lg text-on-surface block font-bold">¿Te recomendó un residente local?</span>
                 <p class="text-xs text-on-surface-variant">Ingresa su nombre de usuario (ej: Carlos R.) para que ambos sumen 50 puntos extra al validar tu próxima misión.</p>
                 <div class="flex gap-sm mt-1">
@@ -348,7 +345,7 @@
                 <span id="recommend-status-msg" class="text-xs text-secondary font-bold hidden mt-1"></span>
             </div>
 
-            <!-- Progreso Dinámico del Pasaporte (Cambiante) -->
+            <!-- Progreso Dinámico del Pasaporte -->
             <div class="flex flex-col gap-md">
                 <h2 class="font-headline-md text-on-surface text-lg font-bold">Progreso de Pasaporte Activo</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
@@ -382,43 +379,11 @@
                 </div>
             </div>
 
-            <!-- Canje de Recompensas -->
+            <!-- Canje de Recompensas (Carga Dinámica desde LocalStorage) -->
             <div class="flex flex-col gap-md">
                 <h2 class="font-headline-md text-on-surface text-lg font-bold">Beneficios y Tienda de Recompensas</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-md">
-                    <!-- Reward 1 -->
-                    <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm flex flex-col justify-between gap-md">
-                        <div>
-                            <span class="text-xs bg-secondary/10 text-secondary font-bold px-3 py-1 rounded-full">Cafeterías</span>
-                            <h4 class="font-bold text-on-surface text-sm mt-3">Café de Cortesía gratis</h4>
-                            <p class="text-xs text-on-surface-variant mt-2">Válido en confiterías céntricas adheridas.</p>
-                        </div>
-                        <button class="btn-canjear w-full py-3 bg-primary text-on-primary text-xs font-bold rounded-xl mt-2 hover:bg-primary-container" data-costo="200" data-premio="Café de Cortesía">
-                            Canjear (200 pts)
-                        </button>
-                    </div>
-                    <!-- Reward 2 -->
-                    <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm flex flex-col justify-between gap-md">
-                        <div>
-                            <span class="text-xs bg-tertiary-fixed-dim/20 text-tertiary-container font-bold px-3 py-1 rounded-full">Cultura</span>
-                            <h4 class="font-bold text-on-surface text-sm mt-3">Pase 2x1 en Museos</h4>
-                            <p class="text-xs text-on-surface-variant mt-2">Accede a dos museos provinciales al precio de uno.</p>
-                        </div>
-                        <button class="btn-canjear w-full py-3 bg-primary text-on-primary text-xs font-bold rounded-xl mt-2 hover:bg-primary-container" data-costo="500" data-premio="2x1 Museos">
-                            Canjear (500 pts)
-                        </button>
-                    </div>
-                    <!-- Reward 3 -->
-                    <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm flex flex-col justify-between gap-md">
-                        <div>
-                            <span class="text-xs bg-secondary/10 text-secondary font-bold px-3 py-1 rounded-full">Artesanos</span>
-                            <h4 class="font-bold text-on-surface text-sm mt-3">20% OFF en Souvenirs</h4>
-                            <p class="text-xs text-on-surface-variant mt-2">Descuento en ferias artesanales de la capital.</p>
-                        </div>
-                        <button class="btn-canjear w-full py-3 bg-primary text-on-primary text-xs font-bold rounded-xl mt-2 hover:bg-primary-container" data-costo="800" data-premio="20% OFF Souvenirs">
-                            Canjear (800 pts)
-                        </button>
-                    </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-md" id="tienda-recompensas-container">
+                    <!-- Dinámico por JS -->
                 </div>
                 <!-- Cupones Canjeados -->
                 <div id="cupones-box" class="hidden flex flex-col gap-sm bg-surface-container p-6 rounded-2xl border border-outline-variant">
@@ -451,117 +416,9 @@
                 </div>
             </div>
 
-            <!-- List View -->
+            <!-- List View (Cargado Dinámicamente) -->
             <div id="misiones-list-container" class="flex flex-col gap-md">
-                <!-- Estacional Pachamama -->
-                <div class="mision-card estacional estacional-pachamama flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant p-4">
-                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-secondary to-tertiary"></div>
-                    <div class="flex flex-col flex-1 gap-xs ml-2">
-                        <div class="flex justify-between items-start">
-                            <span class="text-xs bg-secondary-container text-on-secondary-container font-bold px-3 py-1 rounded-full">Pachamama (Agosto)</span>
-                            <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+100 pts</span>
-                        </div>
-                        <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-3">Ofrenda en el Mercado 6 de Agosto</h3>
-                        <p class="text-xs text-on-surface-variant mt-1">Visita el Mercado Municipal y participa de las actividades de ofrenda y sahumado tradicional.</p>
-                        <button class="btn-mision-activar mt-3 px-4 py-2.5 bg-secondary text-on-secondary rounded-xl text-xs font-bold self-start" data-id="pachamama-ofrenda" data-puntos="100">
-                            Iniciar Misión Especial
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Estacional Primavera -->
-                <div class="mision-card estacional estacional-estudiantes hidden flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant p-4">
-                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-tertiary-fixed-dim to-secondary"></div>
-                    <div class="flex flex-col flex-1 gap-xs ml-2">
-                        <div class="flex justify-between items-start">
-                            <span class="text-xs bg-primary-container text-on-primary-container font-bold px-3 py-1 rounded-full">Primavera (Septiembre)</span>
-                            <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+100 pts</span>
-                        </div>
-                        <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-3">Desfile de Carrozas en Ciudad Cultural</h3>
-                        <p class="text-xs text-on-surface-variant mt-1">Completa el circuito de exposición de carrozas estudiantiles y responde las preguntas de los talleres ecológicos.</p>
-                        <button class="btn-mision-activar mt-3 px-4 py-2.5 bg-secondary text-on-secondary rounded-xl text-xs font-bold self-start" data-id="carrozas-primavera" data-puntos="100">
-                            Iniciar Misión Especial
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Estacional Carnaval -->
-                <div class="mision-card estacional estacional-carnaval hidden flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant p-4">
-                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-error to-secondary"></div>
-                    <div class="flex flex-col flex-1 gap-xs ml-2">
-                        <div class="flex justify-between items-start">
-                            <span class="text-xs bg-error-container text-on-error-container font-bold px-3 py-1 rounded-full">Carnaval (Febrero)</span>
-                            <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+100 pts</span>
-                        </div>
-                        <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-3">Circuito de Comparsa y Desentierro del Diablo</h3>
-                        <p class="text-xs text-on-surface-variant mt-1">Registra tu visita a un evento tradicional de carnaval oficial en la capital y responde sobre su historia gastronómica.</p>
-                        <button class="btn-mision-activar mt-3 px-4 py-2.5 bg-secondary text-on-secondary rounded-xl text-xs font-bold self-start" data-id="carnaval-desentierro" data-puntos="100">
-                            Iniciar Misión Especial
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Misiones Básicas -->
-                <!-- Mision 1 -->
-                <div class="flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant p-4">
-                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary"></div>
-                    <div class="flex flex-col flex-1 gap-xs ml-2">
-                        <div class="flex justify-between items-start">
-                            <span class="text-label-sm font-label-sm text-secondary bg-secondary/10 px-3 py-1 rounded-full">Histórico</span>
-                            <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+50 pts</span>
-                        </div>
-                        <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-3">Cabildo de Jujuy</h3>
-                        <p class="text-xs text-on-surface-variant mt-1">Visita el casco céntrico e ingresa tus respuestas patrimoniales.</p>
-                        <button class="btn-mision-activar mt-3 px-4 py-2.5 bg-secondary text-on-secondary rounded-xl text-xs font-bold self-start" data-id="cabildo" data-puntos="50">
-                            Iniciar Misión
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Mision 2 -->
-                <div class="flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant p-4">
-                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-tertiary-fixed-dim"></div>
-                    <div class="flex flex-col flex-1 gap-xs ml-2">
-                        <div class="flex justify-between items-start">
-                            <span class="text-label-sm font-label-sm text-tertiary-container bg-tertiary-fixed/30 px-3 py-1 rounded-full">Naturaleza</span>
-                            <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+120 pts</span>
-                        </div>
-                        <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-3">Parque Botánico Municipal</h3>
-                        <p class="text-xs text-on-surface-variant mt-1">Completa el recorrido de senderos y avistamiento ecológico.</p>
-                        <button class="btn-mision-activar mt-3 px-4 py-2.5 bg-secondary text-on-secondary rounded-xl text-xs font-bold self-start" data-id="botanico" data-puntos="120">
-                            Iniciar Misión
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Mision 3 -->
-                <div class="flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant p-4">
-                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-container"></div>
-                    <div class="flex flex-col flex-1 gap-xs ml-2">
-                        <div class="flex justify-between items-start">
-                            <span class="text-label-sm font-label-sm text-on-primary-container bg-primary-fixed px-3 py-1 rounded-full">Sabores</span>
-                            <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+70 pts</span>
-                        </div>
-                        <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-3">Paseo Pachamama y Corredor Gastronómico</h3>
-                        <p class="text-xs text-on-surface-variant mt-1">Visita el Paseo y cata una empanada o humita tradicional.</p>
-                        <button class="btn-mision-activar mt-3 px-4 py-2.5 bg-secondary text-on-secondary rounded-xl text-xs font-bold self-start" data-id="corredor-sabores" data-puntos="70">
-                            Iniciar Misión
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Mision 4 (Bloqueada) -->
-                <div class="flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant opacity-75 p-4">
-                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-outline-variant"></div>
-                    <div class="flex flex-col flex-1 gap-xs ml-2">
-                        <div class="flex justify-between items-start">
-                            <span class="text-label-sm font-label-sm text-on-surface-variant bg-surface-variant px-3 py-1 rounded-full">Cultura</span>
-                            <span class="font-label-lg font-bold text-outline flex items-center gap-xs">+80 pts</span>
-                        </div>
-                        <h3 class="text-body-lg font-bold text-on-surface-variant leading-tight mt-3">Museo Juan Galo Lavalle</h3>
-                        <p class="text-xs text-on-surface-variant mt-1 font-bold">Bloqueado. Requiere nivel 5.</p>
-                    </div>
-                </div>
+                <!-- Misiones se cargan de forma dinámica en JS -->
             </div>
 
             <!-- Map View -->
@@ -626,7 +483,7 @@
                 </div>
             </div>
 
-            <!-- Tabla de posiciones / Leaderboard -->
+            <!-- Leaderboard -->
             <div class="flex flex-col gap-md">
                 <h3 class="font-headline-md text-[18px] font-bold">Impacto en el Barrio</h3>
                 <div class="bg-surface-container rounded-2xl shadow-sm overflow-hidden flex flex-col border border-outline-variant" id="leaderboard-ranking">
@@ -635,124 +492,262 @@
             </div>
         </section>
 
-        <!-- Pestaña 4: Admin -->
-        <section id="view-admin" class="tab-content hidden flex-col gap-lg px-2">
+        <!-- Pestaña 4: Admin (CRUD Completo e Interactivo) -->
+        <section id="view-admin" class="tab-content hidden flex-col gap-xl px-2">
             <div class="flex flex-col gap-xs">
-                <h1 class="font-headline-lg-mobile text-on-surface text-2xl font-bold">Panel de Control</h1>
-                <p class="font-body-md text-on-surface-variant text-sm font-semibold">Métricas en tiempo real y gestión municipal.</p>
+                <h1 class="font-headline-lg-mobile text-on-surface text-2xl font-bold">Panel de Gestión Municipal</h1>
+                <p class="font-body-md text-on-surface-variant text-sm font-semibold">Métricas de tráfico, administración de usuarios, misiones y comercios.</p>
             </div>
 
-            <!-- Métricas en tarjetas -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-md">
-                <div class="flex flex-col p-6 rounded-xl bg-surface-container shadow-sm gap-xs border border-outline-variant">
-                    <div class="flex items-center gap-xs text-secondary">
-                        <span class="material-symbols-outlined text-[20px]">groups</span>
-                        <span class="font-label-sm uppercase tracking-wider text-on-surface-variant text-xs">Registrados</span>
+            <!-- Sub-pestañas de administración -->
+            <div class="flex border-b border-outline-variant gap-sm overflow-x-auto pb-2">
+                <button id="subtab-btn-metrics" class="px-4 py-2 text-xs font-bold bg-primary text-on-primary rounded-xl" onclick="switchAdminTab('metrics')">Métricas</button>
+                <button id="subtab-btn-misiones" class="px-4 py-2 text-xs font-bold bg-surface-container text-on-surface-variant rounded-xl" onclick="switchAdminTab('misiones')">Misiones</button>
+                <button id="subtab-btn-usuarios" class="px-4 py-2 text-xs font-bold bg-surface-container text-on-surface-variant rounded-xl" onclick="switchAdminTab('usuarios')">Usuarios</button>
+                <button id="subtab-btn-tiendas" class="px-4 py-2 text-xs font-bold bg-surface-container text-on-surface-variant rounded-xl" onclick="switchAdminTab('tiendas')">Tiendas/Comercios</button>
+            </div>
+
+            <!-- Admin Sub-tab 1: Métricas -->
+            <div id="admin-subtab-metrics" class="flex flex-col gap-lg">
+                <!-- Tarjetas de métricas -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-md">
+                    <div class="flex flex-col p-6 rounded-xl bg-surface-container shadow-sm border border-outline-variant">
+                        <div class="flex items-center gap-xs text-secondary">
+                            <span class="material-symbols-outlined text-[20px]">groups</span>
+                            <span class="font-label-sm uppercase tracking-wider text-xs">Registrados</span>
+                        </div>
+                        <div class="font-display-lg text-primary text-3xl font-bold mt-2" id="admin-total-usuarios">3</div>
+                        <span class="text-xs text-on-surface-variant mt-2 font-bold">Usuarios en DB</span>
                     </div>
-                    <div class="font-display-lg text-primary text-3xl font-bold mt-2" id="admin-total-usuarios">3</div>
-                    <span class="text-xs text-on-surface-variant mt-2 font-bold">Usuarios en DB</span>
+
+                    <div class="flex flex-col p-6 rounded-xl bg-surface-container shadow-sm border border-outline-variant">
+                        <div class="flex items-center gap-xs text-secondary-container">
+                            <span class="material-symbols-outlined text-[20px]">calendar_today</span>
+                            <span class="font-label-sm uppercase tracking-wider text-xs">Día Pico</span>
+                        </div>
+                        <div class="font-display-lg text-primary text-3xl font-bold mt-2">Sábado</div>
+                        <span class="text-xs text-on-surface-variant mt-2 font-bold">Tráfico máximo</span>
+                    </div>
+
+                    <div class="flex flex-col p-6 rounded-xl bg-surface-container shadow-sm border border-outline-variant">
+                        <div class="flex items-center gap-xs text-tertiary-fixed-dim">
+                            <span class="material-symbols-outlined text-[20px]">schedule</span>
+                            <span class="font-label-sm uppercase tracking-wider text-xs">Estadía Prom.</span>
+                        </div>
+                        <div class="font-display-lg text-primary text-3xl font-bold mt-2" id="admin-promedio-estadia">1.8 días</div>
+                        <span class="text-xs text-on-surface-variant mt-2 font-bold">Promedio estadía</span>
+                    </div>
+
+                    <div class="flex flex-col p-6 rounded-xl bg-surface-container shadow-sm border border-outline-variant">
+                        <div class="flex items-center gap-xs text-primary-container">
+                            <span class="material-symbols-outlined text-[20px]">tour</span>
+                            <span class="font-label-sm uppercase tracking-wider text-xs">Ciclo Activo</span>
+                        </div>
+                        <div class="font-display-lg text-primary text-lg font-bold mt-2 leading-tight" id="admin-ciclo-actual">Agosto - Pachamama</div>
+                        <span class="text-xs text-on-surface-variant mt-2 font-bold">Pasaporte estacional</span>
+                    </div>
                 </div>
 
-                <div class="flex flex-col p-6 rounded-xl bg-surface-container shadow-sm gap-xs border border-outline-variant">
-                    <div class="flex items-center gap-xs text-secondary-container">
-                        <span class="material-symbols-outlined text-[20px]">calendar_today</span>
-                        <span class="font-label-sm uppercase tracking-wider text-on-surface-variant text-xs">Día Pico</span>
+                <!-- Gráfico de barras -->
+                <div class="bg-surface-container p-6 rounded-2xl border border-outline-variant flex flex-col gap-md">
+                    <span class="font-label-lg font-bold text-on-surface text-md">Estadísticas de Visitas por Atractivo (Gráfico de Afluencia)</span>
+                    <div class="flex flex-col gap-sm" id="admin-grafico-barras">
+                        <!-- Barras dinámicas -->
                     </div>
-                    <div class="font-display-lg text-primary text-3xl font-bold mt-2">Sábado</div>
-                    <span class="text-xs text-on-surface-variant mt-2 font-bold">Tráfico máximo</span>
                 </div>
 
-                <div class="flex flex-col p-6 rounded-xl bg-surface-container shadow-sm gap-xs border border-outline-variant">
-                    <div class="flex items-center gap-xs text-tertiary-fixed-dim">
-                        <span class="material-symbols-outlined text-[20px]">schedule</span>
-                        <span class="font-label-sm uppercase tracking-wider text-on-surface-variant text-xs">Estadía Prom.</span>
+                <!-- Tabla de visitas -->
+                <div class="bg-surface-container p-6 rounded-2xl border border-outline-variant flex flex-col gap-sm">
+                    <span class="font-label-lg font-bold text-on-surface text-md">Tabla de Validaciones Realizadas</span>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="border-b border-outline-variant font-bold text-on-surface-variant">
+                                    <th class="py-3">Atractivo</th>
+                                    <th class="py-3">Total de Visitas</th>
+                                    <th class="py-3">Categoría</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-tabla-visitas">
+                                <!-- Carga dinámica -->
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="font-display-lg text-primary text-3xl font-bold mt-2" id="admin-promedio-estadia">1.8 días</div>
-                    <span class="text-xs text-on-surface-variant mt-2 font-bold">Promedio estadía</span>
                 </div>
 
-                <div class="flex flex-col p-6 rounded-xl bg-surface-container shadow-sm gap-xs border border-outline-variant">
-                    <div class="flex items-center gap-xs text-primary-container">
-                        <span class="material-symbols-outlined text-[20px]">tour</span>
-                        <span class="font-label-sm uppercase tracking-wider text-on-surface-variant text-xs">Ciclo Activo</span>
+                <!-- Historial de Validaciones -->
+                <div class="bg-surface-container p-6 rounded-2xl border border-outline-variant flex flex-col gap-sm">
+                    <span class="font-label-lg font-bold text-on-surface text-md">Historial de Puntos y Validaciones en Vivo</span>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="border-b border-outline-variant font-bold text-on-surface-variant">
+                                    <th class="py-3">Usuario</th>
+                                    <th class="py-3">Atractivo / Acción</th>
+                                    <th class="py-3">Puntos</th>
+                                    <th class="py-3">Fecha y Hora</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-historial-validaciones">
+                                <!-- Carga dinámica -->
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="font-display-lg text-primary text-lg font-bold mt-2 leading-tight" id="admin-ciclo-actual">Agosto - Pachamama</div>
-                    <span class="text-xs text-on-surface-variant mt-2 font-bold">Pasaporte estacional</span>
                 </div>
             </div>
 
-            <!-- Gráfico de barras de afluencia (Visualización Real de Estadísticas) -->
-            <div class="bg-surface-container p-6 rounded-2xl border border-outline-variant flex flex-col gap-md">
-                <span class="font-label-lg font-bold text-on-surface text-md">Estadísticas de Visitas por Atractivo (Gráfico de Afluencia)</span>
-                <div class="flex flex-col gap-sm" id="admin-grafico-barras">
-                    <!-- Barras se cargan de forma dinámica en JS -->
+            <!-- Admin Sub-tab 2: Gestión de Misiones -->
+            <div id="admin-subtab-misiones" class="hidden flex flex-col gap-lg">
+                <!-- Crear / Editar Misiones Form -->
+                <div class="bg-surface-container p-6 rounded-3xl border border-outline-variant flex flex-col gap-md">
+                    <h3 class="font-headline-md text-[18px] text-primary font-bold" id="admin-mision-form-title">Agregar Nueva Misión / Atractivo</h3>
+                    <form id="form-nueva-mision" class="flex flex-col gap-sm">
+                        <input type="hidden" id="edit-mision-id"/>
+                        <div>
+                            <label class="block text-xs font-bold text-on-surface-variant mb-1">Nombre del Atractivo</label>
+                            <input type="text" id="admin-mision-nombre" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-sm"/>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-on-surface-variant mb-1">Categoría</label>
+                            <select id="admin-mision-cat" class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-sm">
+                                <option value="Historico">Histórico</option>
+                                <option value="Naturaleza">Naturaleza</option>
+                                <option value="Cultura">Cultura</option>
+                                <option value="Sabores">Sabores</option>
+                                <option value="Estacional">Estacional (Estatal)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-on-surface-variant mb-1">Puntos Base a Otorgar</label>
+                            <input type="number" id="admin-mision-puntos" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-sm"/>
+                        </div>
+                        <div class="flex gap-sm">
+                            <button type="submit" class="flex-1 py-3 bg-primary text-on-primary font-headline-md rounded-xl shadow-md font-bold" id="admin-mision-btn-submit">
+                                Publicar Misión
+                            </button>
+                            <button type="button" class="hidden px-4 py-3 bg-surface-container text-on-surface-variant font-headline-md rounded-xl" id="admin-mision-btn-cancel">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tabla CRUD de Misiones -->
+                <div class="bg-surface-container p-6 rounded-2xl border border-outline-variant flex flex-col gap-sm">
+                    <span class="font-label-lg font-bold text-on-surface text-md">Listado de Misiones / Atractivos</span>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="border-b border-outline-variant font-bold text-on-surface-variant">
+                                    <th class="py-3">Atractivo</th>
+                                    <th class="py-3">Categoría</th>
+                                    <th class="py-3">Puntos</th>
+                                    <th class="py-3">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-crud-misiones-tbody">
+                                <!-- Dinámico -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- Tabla de visitas -->
-            <div class="bg-surface-container p-6 rounded-2xl border border-outline-variant flex flex-col gap-sm">
-                <span class="font-label-lg font-bold text-on-surface text-md">Tabla de Validaciones Realizadas</span>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead>
-                            <tr class="border-b border-outline-variant font-bold text-on-surface-variant">
-                                <th class="py-3">Atractivo</th>
-                                <th class="py-3">Total de Visitas</th>
-                                <th class="py-3">Categoría</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-tabla-visitas">
-                            <!-- Carga dinámica -->
-                        </tbody>
-                    </table>
+            <!-- Admin Sub-tab 3: Gestión de Usuarios -->
+            <div id="admin-subtab-usuarios" class="hidden flex-col gap-lg">
+                <!-- Formulario Agregar Usuario -->
+                <div class="bg-surface-container p-6 rounded-3xl border border-outline-variant flex flex-col gap-md">
+                    <h3 class="font-headline-md text-[18px] text-primary font-bold">Agregar Nuevo Usuario</h3>
+                    <form id="form-nuevo-usuario-admin" class="flex flex-col gap-sm">
+                        <div>
+                            <label class="block text-xs font-bold text-on-surface-variant mb-1">Nombre Completo / ID de Usuario</label>
+                            <input type="text" id="admin-user-nombre" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-sm"/>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-on-surface-variant mb-1">Rol</label>
+                            <select id="admin-user-rol" class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-sm">
+                                <option value="turista">Turista</option>
+                                <option value="residente">Residente</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-on-surface-variant mb-1">Puntos Iniciales</label>
+                            <input type="number" id="admin-user-puntos" value="0" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-sm"/>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-primary text-on-primary font-headline-md rounded-xl shadow-md font-bold">
+                            Registrar Usuario
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Tabla CRUD de Usuarios -->
+                <div class="bg-surface-container p-6 rounded-2xl border border-outline-variant flex flex-col gap-sm">
+                    <span class="font-label-lg font-bold text-on-surface text-md">Usuarios Registrados en el Sistema</span>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="border-b border-outline-variant font-bold text-on-surface-variant">
+                                    <th class="py-3">Usuario</th>
+                                    <th class="py-3">Rol</th>
+                                    <th class="py-3">Puntos</th>
+                                    <th class="py-3">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-crud-usuarios-tbody">
+                                <!-- Dinámico -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- Historial de Validaciones -->
-            <div class="bg-surface-container p-6 rounded-2xl border border-outline-variant flex flex-col gap-sm">
-                <span class="font-label-lg font-bold text-on-surface text-md">Historial de Puntos y Validaciones en Vivo</span>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead>
-                            <tr class="border-b border-outline-variant font-bold text-on-surface-variant">
-                                <th class="py-3">Usuario</th>
-                                <th class="py-3">Atractivo / Acción</th>
-                                <th class="py-3">Puntos</th>
-                                <th class="py-3">Fecha y Hora</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-historial-validaciones">
-                            <!-- Carga dinámica -->
-                        </tbody>
-                    </table>
+            <!-- Admin Sub-tab 4: Gestión de Tiendas/Premios -->
+            <div id="admin-subtab-tiendas" class="hidden flex-col gap-lg">
+                <!-- Formulario Agregar Premio -->
+                <div class="bg-surface-container p-6 rounded-3xl border border-outline-variant flex flex-col gap-md">
+                    <h3 class="font-headline-md text-[18px] text-primary font-bold">Agregar Tienda / Beneficio</h3>
+                    <form id="form-nuevo-premio" class="flex flex-col gap-sm">
+                        <div>
+                            <label class="block text-xs font-bold text-on-surface-variant mb-1">Nombre del Beneficio / Premio</label>
+                            <input type="text" id="admin-premio-nombre" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-sm"/>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-on-surface-variant mb-1">Tienda / Categoría de Comercio</label>
+                            <input type="text" id="admin-premio-tienda" placeholder="Ej: Cafeterías, Hotelería, Artesanos" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-sm"/>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-on-surface-variant mb-1">Puntos requeridos para canje</label>
+                            <input type="number" id="admin-premio-costo" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-sm"/>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-on-surface-variant mb-1">Descripción corta</label>
+                            <input type="text" id="admin-premio-desc" placeholder="Ej: 15% de descuento los días lunes" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-sm"/>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-primary text-on-primary font-headline-md rounded-xl shadow-md font-bold">
+                            Agregar Beneficio
+                        </button>
+                    </form>
                 </div>
-            </div>
 
-            <!-- Formulario para agregar actividades -->
-            <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant shadow-sm flex flex-col gap-md">
-                <h3 class="font-headline-md text-[18px] text-primary font-bold">Agregar Nueva Misión / Actividad</h3>
-                <form id="form-nueva-mision" class="flex flex-col gap-sm">
-                    <div>
-                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Nombre del Atractivo</label>
-                        <input type="text" id="admin-mision-nombre" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-sm"/>
+                <!-- Tabla CRUD de Recompensas -->
+                <div class="bg-surface-container p-6 rounded-2xl border border-outline-variant flex flex-col gap-sm">
+                    <span class="font-label-lg font-bold text-on-surface text-md">Beneficios Adheridos en Comercios</span>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="border-b border-outline-variant font-bold text-on-surface-variant">
+                                    <th class="py-3">Premio</th>
+                                    <th class="py-3">Categoría / Comercio</th>
+                                    <th class="py-3">Puntos Requeridos</th>
+                                    <th class="py-3">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-crud-tiendas-tbody">
+                                <!-- Dinámico -->
+                            </tbody>
+                        </table>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Categoría</label>
-                        <select id="admin-mision-cat" class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-sm">
-                            <option value="Historico">Histórico</option>
-                            <option value="Naturaleza">Naturaleza</option>
-                            <option value="Cultura">Cultura</option>
-                            <option value="Sabores">Sabores</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Puntos a otorgar</label>
-                        <input type="number" id="admin-mision-puntos" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-sm"/>
-                    </div>
-                    <button type="submit" class="w-full py-3 bg-primary text-on-primary font-headline-md rounded-xl shadow-md mt-2 font-bold">
-                        Publicar Misión
-                    </button>
-                </form>
+                </div>
             </div>
         </section>
 
@@ -779,7 +774,7 @@
 
     </main>
 
-    <!-- Barra de Navegación Inferior (Con altura y padding adecuados para móvil) -->
+    <!-- Barra de Navegación Inferior -->
     <nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-1px_8px_rgba(0,0,0,0.06)] border-t border-outline-variant">
         <div class="flex justify-around items-center h-20 max-w-5xl mx-auto">
             <a class="flex flex-col items-center justify-center min-w-[64px] text-secondary font-bold transition-colors" data-path="home" href="#" id="nav-home">
