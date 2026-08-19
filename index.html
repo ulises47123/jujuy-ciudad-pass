@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jujuy Ciudad Pass</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <div class="isotipo">⛰️🌙</div>
+            <div class="logo-text">
+                <h1>JUJUY <span class="pass">CIUDAD PASS</span></h1>
+                <h2>PASAPORTE TURÍSTICO DIGITAL</h2>
+                <p class="lema">Descubrí, recorré, viví</p>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="seleccion-perfil" class="view active">
+            <div class="intro-box">
+                <h3>¿CÓMO FUNCIONA?</h3>
+                <p>Una experiencia gamificada para descubrir San Salvador de Jujuy, sumar puntos, obtener beneficios y vivir la ciudad de una manera diferente.</p>
+            </div>
+
+            <h3 class="text-center">Elegí tu tipo de usuario para comenzar</h3>
+            <div class="modulos-container">
+                <div class="card card-turista">
+                    <h4>Soy Turista</h4>
+                    <p>Descubrí San Salvador de Jujuy, completá misiones y obtené descuentos.</p>
+                    <button id="btn-soy-turista" class="btn btn-verde">Entrar como Turista</button>
+                </div>
+                
+                <div class="card card-residente">
+                    <h4>Soy Residente</h4>
+                    <p>Viví y recomendá tu ciudad. Redescubrí lugares y sumá puntos.</p>
+                    <button id="btn-soy-residente" class="btn btn-naranja">Entrar como Residente</button>
+                </div>
+
+                <div class="card card-admin">
+                    <h4>Administración</h4>
+                    <p>Acceso para gestionar datos, estadísticas y actividades.</p>
+                    <button id="btn-soy-admin" class="btn btn-azul">Acceso Admin</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vista Turista -->
+        <section id="vista-turista" class="view hidden">
+            <button class="btn btn-back">Volver al Inicio</button>
+            <h2 class="title-verde">Perfil Turista</h2>
+            
+            <div id="form-turista">
+                <h3>1. Creá tu perfil y personalizá tu pasaporte</h3>
+                <form id="registro-turista">
+                    <label>Lugar de Residencia (Provincia/Ciudad):</label>
+                    <input type="text" id="t-origen" required>
+
+                    <label>Tiempo Disponible:</label>
+                    <select id="t-tiempo">
+                        <option value="express">Pocas horas - Mediodía (Express)</option>
+                        <option value="explorador">Estadía de 1 día (Explorador)</option>
+                        <option value="pleno">Estadía de 2 días (Jujuy a Pleno)</option>
+                        <option value="sinprisa">3 días o más (Sin Prisa)</option>
+                    </select>
+
+                    <label>Modalidad de viaje:</label>
+                    <select id="t-viaje">
+                        <option value="solo">Solo/a</option>
+                        <option value="pareja">Pareja</option>
+                        <option value="familia">Familia (+15 pts bonus)</option>
+                        <option value="amigos">Amigos (+15 pts bonus)</option>
+                    </select>
+
+                    <label>Intereses (Seleccioná uno o más):</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" value="historia"> Historia y Patrimonio</label>
+                        <label><input type="checkbox" value="cultura"> Cultura</label>
+                        <label><input type="checkbox" value="naturaleza"> Naturaleza</label>
+                        <label><input type="checkbox" value="sabores"> Sabores Locales</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-verde">Generar Pasaporte</button>
+                </form>
+            </div>
+
+            <div id="dashboard-turista" class="hidden">
+                <h3>Tu Pasaporte Activo</h3>
+                <div class="stats">
+                    <p><strong>Nivel:</strong> Explorador</p>
+                    <p><strong>Puntos:</strong> <span id="t-puntos">0</span> pts</p>
+                </div>
+                
+                <h4>Misiones Recomendadas</h4>
+                <ul class="misiones-list">
+                    <li>
+                        <span>🏛️ Visitar Cabildo (Historia)</span>
+                        <button class="btn btn-sm btn-verde btn-mision" data-pts="40">Escanear QR y Responder (+40 pts)</button>
+                    </li>
+                    <li>
+                        <span>🌳 Parque Botánico (Naturaleza)</span>
+                        <button class="btn btn-sm btn-verde btn-mision" data-pts="50">Escanear QR y Responder (+50 pts)</button>
+                    </li>
+                </ul>
+
+                <h4>Recompensas Disponibles</h4>
+                <div class="recompensas">
+                    <div class="recompensa-item">10% OFF Gastronomía (Requiere 100 pts)</div>
+                    <div class="recompensa-item">2x1 Museos (Requiere 200 pts)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vista Residente -->
+        <section id="vista-residente" class="view hidden">
+            <button class="btn btn-back">Volver al Inicio</button>
+            <h2 class="title-naranja">Perfil Residente</h2>
+
+            <div class="stats mb-20">
+                <p><strong>Nivel:</strong> Embajador Local</p>
+                <p><strong>Puntos de Comunidad:</strong> <span id="r-puntos">0</span> pts</p>
+            </div>
+
+            <div class="acciones-residente">
+                <div class="accion-card">
+                    <h4>Recomendar a Turistas</h4>
+                    <p>Recomendá lugares como el Parque Botánico para sumar puntos cuando el turista lo visite.</p>
+                    <button class="btn btn-naranja btn-recomendar">Enviar Recomendación (+20 pts)</button>
+                </div>
+                <div class="accion-card">
+                    <h4>Acciones Responsables</h4>
+                    <p>Participá en cuidado ambiental o movilidad sostenible.</p>
+                    <button class="btn btn-naranja btn-recomendar">Registrar Acción (+30 pts)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vista Admin -->
+        <section id="vista-admin" class="view hidden">
+            <button class="btn btn-back">Volver al Inicio</button>
+            <h2 class="title-azul">Panel de Administración</h2>
+
+            <div class="admin-dashboard">
+                <div class="admin-card">
+                    <h4>Estadísticas de Visitas</h4>
+                    <p><strong>Lugar más visitado:</strong> Cabildo (342 visitas esta semana)</p>
+                    <p><strong>Lugar menos visitado:</strong> Museo Lola Mora (12 visitas)</p>
+                </div>
+                <div class="admin-card">
+                    <h4>Datos de Permanencia</h4>
+                    <p><strong>Promedio de estadía:</strong> 2 días (Jujuy a Pleno)</p>
+                </div>
+                
+                <div class="admin-actions mt-20">
+                    <h4>Gestión de Actividades</h4>
+                    <form id="form-actividad">
+                        <input type="text" placeholder="Nombre de nueva actividad/misión" required>
+                        <select>
+                            <option>Turista</option>
+                            <option>Residente</option>
+                        </select>
+                        <input type="number" placeholder="Puntos a otorgar" required>
+                        <button type="submit" class="btn btn-azul">Agregar Actividad</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <h4>BENEFICIOS PARA LA CIUDAD</h4>
+            <ul class="beneficios-lista">
+                <li>Diversificación de circuitos</li>
+                <li>Mayor consumo local</li>
+                <li>Obtención de información estadística</li>
+            </ul>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

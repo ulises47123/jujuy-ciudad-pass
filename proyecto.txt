@@ -1,0 +1,16 @@
+Proyecto: Plataforma Web "Jujuy Ciudad Pass"
+
+¿Qué estoy creando?
+Estoy desarrollando una aplicación web (compuesta por HTML, CSS y JavaScript) que materializa el concepto del pasaporte turístico digital "Jujuy Ciudad Pass". La interfaz está estructurada modularmente y cuenta con interacciones funcionales para:
+- Registro de turistas con asignación de bonus por grupo.
+- Completado de misiones con un sistema de gamificación (acumulación de puntos por lectura de códigos QR, ubicación y respuestas).
+- Acciones de recomendación y cuidado ambiental para residentes (suman "Puntos de Comunidad").
+- Panel de gestión para ver métricas de visitas y agregar nuevas misiones y puntos.
+
+La interfaz visual fue mejorada considerablemente, respetando estrictamente la paleta de colores institucional requerida en los diseños originales (Azul Marino, Fucsia, Verde y Naranja).
+
+¿Para quién va dirigido?
+El proyecto va dirigido principalmente a tres actores clave:
+1. El Turista (nacional o extranjero): Que busca conocer San Salvador de Jujuy, descubrir rutas, realizar misiones en atractivos (históricos, naturales, culturales) y obtener beneficios y descuentos en comercios locales.
+2. El Residente Local (jujeño): Que utilizará la plataforma para redescubrir su propia ciudad, actuar como embajador local recomendando lugares a los turistas y participar en acciones responsables (sin competir con el turista).
+3. La Administración (Municipalidad de San Salvador de Jujuy y comercios adheridos): Quienes obtendrán información estadística valiosa para diversificar los circuitos turísticos, fomentar el consumo local y gestionar los datos sobre qué atractivos son más o menos visitados.
