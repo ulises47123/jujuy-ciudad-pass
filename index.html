@@ -116,17 +116,56 @@
                 <span class="font-headline-md text-body-lg text-primary tracking-tight font-bold">JUJUY CIUDAD PASS</span>
             </div>
             <button id="btn-cambiar-perfil" class="px-3 py-1 text-label-sm bg-surface-container rounded-full text-primary border border-outline-variant hover:bg-surface-container-high transition-colors">
-                Cambiar Perfil
+                Salir / Cambiar
             </button>
         </div>
     </header>
 
-    <!-- Selector de Perfil (Modal de Inicio) -->
-    <div id="modal-seleccion-perfil" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <!-- Modal de Bienvenida (Nuevo vs Existente) -->
+    <div id="modal-bienvenida" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-surface-container-lowest rounded-3xl p-6 shadow-2xl w-full max-w-md flex flex-col gap-lg border border-outline-variant text-center">
+            <h2 class="font-headline-lg text-on-surface text-[24px]">Jujuy Ciudad Pass</h2>
+            <p class="font-body-md text-on-surface-variant">Para guardar tus puntos y obtener beneficios, dinos si ya has usado la aplicacion antes.</p>
+            
+            <div class="flex flex-col gap-sm">
+                <button id="btn-usuario-nuevo" class="w-full py-4 bg-secondary text-on-secondary font-headline-md rounded-2xl shadow-md hover:bg-secondary-container transition-colors">
+                    Soy Usuario Nuevo
+                </button>
+                <button id="btn-usuario-existente" class="w-full py-4 bg-primary text-on-primary font-headline-md rounded-2xl shadow-md hover:bg-primary-container transition-colors">
+                    Ya tengo una cuenta
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Login (Usuario Existente) -->
+    <div id="modal-login" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 hidden">
+        <div class="bg-surface-container-lowest rounded-3xl p-6 shadow-2xl w-full max-w-md flex flex-col gap-md border border-outline-variant">
+            <div class="text-center">
+                <h3 class="font-headline-lg text-[22px] text-primary">Ingresar a mi Cuenta</h3>
+                <p class="font-body-md text-on-surface-variant text-sm mt-1">Escribe tu nombre de usuario para recuperar tus puntos y pasaporte.</p>
+            </div>
+            <form id="form-login-usuario" class="flex flex-col gap-md">
+                <div>
+                    <label class="block font-label-lg text-on-surface mb-1">Nombre de Usuario</label>
+                    <input type="text" id="login-username" placeholder="Ej: Mateo Garcia" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-body-md"/>
+                </div>
+                <button type="submit" class="w-full py-3 bg-primary text-on-primary font-headline-md rounded-xl shadow-md hover:bg-primary-container">
+                    Ingresar
+                </button>
+                <button type="button" id="btn-login-cancelar" class="w-full py-2 text-on-surface-variant font-label-lg rounded-xl hover:bg-surface-container">
+                    Cancelar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Selector de Perfil (Solo para usuarios nuevos) -->
+    <div id="modal-seleccion-perfil" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 hidden">
         <div class="bg-surface-container-lowest rounded-3xl p-6 shadow-2xl w-full max-w-md flex flex-col gap-lg border border-outline-variant">
             <div class="text-center">
-                <h2 class="font-headline-lg text-on-surface text-[24px] mb-2">Bienvenido a Jujuy Ciudad Pass</h2>
-                <p class="font-body-md text-on-surface-variant">Una experiencia gamificada para descubrir San Salvador de Jujuy, sumar puntos y obtener beneficios.</p>
+                <h2 class="font-headline-lg text-on-surface text-[24px] mb-2">Crear Perfil</h2>
+                <p class="font-body-md text-on-surface-variant">Selecciona tu modalidad de participacion en la ciudad.</p>
             </div>
             <div class="flex flex-col gap-md">
                 <button id="sel-turista" class="w-full p-4 rounded-2xl bg-surface-container text-left border border-outline-variant hover:border-secondary transition-all flex items-center gap-md group">
@@ -135,7 +174,7 @@
                     </div>
                     <div class="flex-1">
                         <span class="font-label-lg text-on-surface block group-hover:text-secondary">Soy Turista</span>
-                        <span class="font-body-md text-xs text-on-surface-variant">Descubrí la ciudad y sumá puntos de experiencia.</span>
+                        <span class="font-body-md text-xs text-on-surface-variant">Inicias con 0 puntos. Guarda tus recorridos.</span>
                     </div>
                 </button>
 
@@ -145,7 +184,7 @@
                     </div>
                     <div class="flex-1">
                         <span class="font-label-lg text-on-surface block group-hover:text-tertiary-fixed-dim">Soy Residente</span>
-                        <span class="font-body-md text-xs text-on-surface-variant">Recomendá lugares, cuidá tu ciudad y sumá puntos.</span>
+                        <span class="font-body-md text-xs text-on-surface-variant">Inicias con 0 puntos. Recomienda y cuida tu ciudad.</span>
                     </div>
                 </button>
 
@@ -154,8 +193,8 @@
                         <span class="material-symbols-outlined text-on-primary-container text-[24px]">shield_person</span>
                     </div>
                     <div class="flex-1">
-                        <span class="font-label-lg text-on-surface block group-hover:text-primary">Administración</span>
-                        <span class="font-body-md text-xs text-on-surface-variant">Visualizá estadísticas y gestioná las actividades municipales.</span>
+                        <span class="font-label-lg text-on-surface block group-hover:text-primary">Administracion</span>
+                        <span class="font-body-md text-xs text-on-surface-variant">Gestion de estadisticas y actividades municipales.</span>
                     </div>
                 </button>
             </div>
@@ -165,16 +204,20 @@
     <!-- Contenido Principal -->
     <main class="relative w-full pt-20 pb-24 min-h-screen max-w-5xl mx-auto px-margin-mobile">
 
-        <!-- Formulario Personalización Turista -->
+        <!-- Formulario Personalización Turista Nuevo -->
         <section id="form-turista-section" class="hidden flex-col gap-lg bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant shadow-sm max-w-md mx-auto my-6">
             <div class="text-center">
-                <h2 class="font-headline-lg text-[22px] text-primary">Personalizá tu Pasaporte</h2>
-                <p class="font-body-md text-on-surface-variant text-sm mt-1">Configuramos tus misiones según tus necesidades.</p>
+                <h2 class="font-headline-lg text-[22px] text-primary">Registro de Turista Nuevo</h2>
+                <p class="font-body-md text-on-surface-variant text-sm mt-1">Iniciaras con 0 puntos. Ingresa tus datos para guardar tus misiones.</p>
             </div>
             <form id="form-perfil-turista" class="flex flex-col gap-md">
                 <div>
+                    <label class="block font-label-lg text-on-surface mb-1">Nombre Completo</label>
+                    <input type="text" id="turista-nombre" placeholder="Tu nombre" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-body-md"/>
+                </div>
+                <div>
                     <label class="block font-label-lg text-on-surface mb-1">Origen (Provincia/País)</label>
-                    <input type="text" id="turista-origen" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-body-md"/>
+                    <input type="text" id="turista-origen" placeholder="Ej: Cordoba, Argentina" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-body-md"/>
                 </div>
                 <div>
                     <label class="block font-label-lg text-on-surface mb-1">Tiempo de Estadía</label>
@@ -195,7 +238,28 @@
                     </select>
                 </div>
                 <button type="submit" class="w-full py-3 bg-secondary text-on-secondary font-headline-md rounded-2xl shadow-md hover:bg-secondary-container transition-colors">
-                    Comenzar Recorrido
+                    Registrarse y Comenzar
+                </button>
+            </form>
+        </section>
+
+        <!-- Formulario Personalización Residente Nuevo -->
+        <section id="form-residente-section" class="hidden flex-col gap-lg bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant shadow-sm max-w-md mx-auto my-6">
+            <div class="text-center">
+                <h2 class="font-headline-lg text-[22px] text-tertiary-fixed-dim">Registro de Residente Nuevo</h2>
+                <p class="font-body-md text-on-surface-variant text-sm mt-1">Iniciaras con 0 puntos. Registrate para recomendar lugares a turistas.</p>
+            </div>
+            <form id="form-perfil-residente" class="flex flex-col gap-md">
+                <div>
+                    <label class="block font-label-lg text-on-surface mb-1">Nombre Completo</label>
+                    <input type="text" id="residente-nombre" placeholder="Tu nombre" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-body-md"/>
+                </div>
+                <div>
+                    <label class="block font-label-lg text-on-surface mb-1">Barrio de Residencia</label>
+                    <input type="text" id="residente-barrio" placeholder="Ej: Barrio Centro" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-body-md"/>
+                </div>
+                <button type="submit" class="w-full py-3 bg-tertiary text-on-tertiary font-headline-md rounded-2xl shadow-md hover:bg-tertiary-container transition-colors">
+                    Registrarse y Comenzar
                 </button>
             </form>
         </section>
@@ -203,7 +267,7 @@
         <!-- Pestaña 1: Pasaporte (Home) -->
         <section id="view-home" class="tab-content flex flex-col gap-lg">
             <div class="flex flex-col gap-xs pt-md">
-                <h1 class="font-headline-lg-mobile text-on-surface">Hola, Visitante</h1>
+                <h1 class="font-headline-lg-mobile text-on-surface">Hola, <span id="saludo-usuario">Visitante</span></h1>
                 <p class="font-body-md text-on-surface-variant">Listo para explorar Jujuy hoy?</p>
             </div>
 
@@ -218,8 +282,8 @@
                                 <span class="material-symbols-outlined text-[32px] text-on-primary-container">account_circle</span>
                             </div>
                             <div class="flex flex-col">
-                                <span id="passport-username" class="font-headline-md text-on-primary">Mateo Garcia</span>
-                                <span id="passport-location" class="font-label-sm text-primary-fixed-dim tracking-wide uppercase">Argentina</span>
+                                <span id="passport-username" class="font-headline-md text-on-primary">Usuario Temporal</span>
+                                <span id="passport-location" class="font-label-sm text-primary-fixed-dim tracking-wide uppercase">Jujuy, Argentina</span>
                             </div>
                         </div>
                         <div class="bg-primary-container/50 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-xs">
@@ -230,7 +294,7 @@
                     <div class="flex flex-col gap-sm mt-sm">
                         <span class="font-label-sm text-primary-fixed-dim uppercase tracking-wide">Puntos Acumulados</span>
                         <div class="flex items-baseline gap-xs">
-                            <span class="font-display-lg text-secondary-fixed text-4xl font-bold" id="animated-points">1250</span>
+                            <span class="font-display-lg text-secondary-fixed text-4xl font-bold" id="animated-points">0</span>
                             <span class="font-label-sm text-on-primary">pts</span>
                         </div>
                     </div>
@@ -244,8 +308,19 @@
                 </div>
                 <div class="flex flex-col flex-1">
                     <span class="font-label-lg text-on-tertiary-container">Modo Grupal Activo</span>
-                    <span class="font-body-md text-on-tertiary-container/80">Recibes un bono adicional de 15 puntos por cada misión completada en grupo.</span>
+                    <span class="font-body-md text-on-tertiary-container/80 font-bold">Recibes un bono adicional de 15 puntos por cada mision completada en grupo.</span>
                 </div>
+            </div>
+
+            <!-- Enter Recommendation Code (For Tourists to credit local resident) -->
+            <div id="tourist-recommendation-box" class="bg-surface-container rounded-2xl p-md shadow-sm border border-outline-variant flex flex-col gap-sm">
+                <span class="font-label-lg text-on-surface block font-bold">¿Te recomendo un residente local?</span>
+                <p class="text-xs text-on-surface-variant">Ingresa su nombre de usuario para que ambos sumen 50 puntos extra al validar tu proxima mision.</p>
+                <div class="flex gap-sm">
+                    <input type="text" id="input-code-recommend" placeholder="Nombre del residente" class="flex-1 p-2 rounded-xl bg-surface border border-outline-variant focus:outline-none text-sm"/>
+                    <button id="btn-apply-recommend" class="px-4 py-2 bg-primary text-on-primary text-xs font-bold rounded-xl shadow-sm hover:bg-primary-container">Aplicar</button>
+                </div>
+                <span id="recommend-status-msg" class="text-xs text-secondary font-bold hidden"></span>
             </div>
 
             <!-- Quick Stats Grid -->
@@ -257,7 +332,7 @@
                             <span class="material-symbols-outlined text-on-secondary-container">explore</span>
                         </div>
                         <div class="flex flex-col">
-                            <span class="font-headline-md text-on-surface text-2xl font-bold" id="misiones-contador">2</span>
+                            <span class="font-headline-md text-on-surface text-2xl font-bold" id="misiones-contador">0</span>
                             <span class="font-label-sm text-on-surface-variant">Misiones Completadas</span>
                         </div>
                     </div>
@@ -267,12 +342,12 @@
                             <div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center">
                                 <span class="material-symbols-outlined text-on-surface-variant">redeem</span>
                             </div>
-                            <span class="font-label-sm text-secondary font-bold" id="pts-faltantes">250 pts para canjear</span>
+                            <span class="font-label-sm text-secondary font-bold" id="pts-faltantes">1500 pts para canjear</span>
                         </div>
                         <div class="flex flex-col gap-xs">
-                            <span class="font-label-sm text-on-surface-variant">Próxima Recompensa: Café de Cortesía</span>
+                            <span id="recompensa-sig-lbl" class="font-label-sm text-on-surface-variant">Proxima Recompensa: Cafe de Cortesia</span>
                             <div class="w-full h-2 rounded-full bg-surface-variant overflow-hidden">
-                                <div id="barra-progreso" class="h-full bg-secondary rounded-full w-[80%]"></div>
+                                <div id="barra-progreso" class="h-full bg-secondary rounded-full w-[0%]"></div>
                             </div>
                         </div>
                     </div>
@@ -310,13 +385,13 @@
                     <div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary"></div>
                     <div class="flex flex-col flex-1 p-md gap-xs">
                         <div class="flex justify-between items-start">
-                            <span class="text-label-sm font-label-sm text-secondary bg-secondary/10 px-2 py-0.5 rounded-full">Histórico</span>
+                            <span class="text-label-sm font-label-sm text-secondary bg-secondary/10 px-2 py-0.5 rounded-full">Historico</span>
                             <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+50 pts</span>
                         </div>
                         <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-xs">Cabildo de Jujuy</h3>
-                        <p class="text-label-sm text-on-surface-variant">Visita el casco céntrico e ingresa tus respuestas patrimoniales.</p>
+                        <p class="text-label-sm text-on-surface-variant">Visita el casco centrico e ingresa tus respuestas patrimoniales.</p>
                         <button class="btn-mision-activar mt-2 px-4 py-2 bg-secondary text-on-secondary rounded-xl text-label-sm font-bold self-start" data-id="cabildo" data-puntos="50">
-                            Iniciar Misión
+                            Iniciar Mision
                         </button>
                     </div>
                 </div>
@@ -329,10 +404,10 @@
                             <span class="text-label-sm font-label-sm text-tertiary-container bg-tertiary-fixed/30 px-2 py-0.5 rounded-full">Naturaleza</span>
                             <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+120 pts</span>
                         </div>
-                        <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-xs">Parque Botánico Municipal</h3>
-                        <p class="text-label-sm text-on-surface-variant">Completa el recorrido de senderos y avistamiento ecológico.</p>
+                        <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-xs">Parque Botanico Municipal</h3>
+                        <p class="text-label-sm text-on-surface-variant">Completa el recorrido de senderos y avistamiento ecologico.</p>
                         <button class="btn-mision-activar mt-2 px-4 py-2 bg-secondary text-on-secondary rounded-xl text-label-sm font-bold self-start" data-id="botanico" data-puntos="120">
-                            Iniciar Misión
+                            Iniciar Mision
                         </button>
                     </div>
                 </div>
@@ -346,7 +421,7 @@
                             <span class="font-label-lg font-bold text-outline flex items-center gap-xs">+80 pts</span>
                         </div>
                         <h3 class="text-body-lg font-bold text-on-surface-variant leading-tight mt-xs">Museo Juan Galo Lavalle</h3>
-                        <p class="text-label-sm text-on-surface-variant">Requiere nivel 5 para desbloquear esta misión.</p>
+                        <p class="text-label-sm text-on-surface-variant">Requiere nivel 5 para desbloquear esta mision.</p>
                     </div>
                 </div>
             </div>
@@ -368,8 +443,8 @@
                         <span class="material-symbols-outlined text-[16px]">eco</span>
                         Comunidad Activa
                     </div>
-                    <h2 class="font-display-lg text-[24px] leading-[30px] font-bold text-on-surface mt-xs">Tú eres el corazón de Jujuy</h2>
-                    <p class="font-body-md text-on-surface-variant text-sm mt-1">Suma puntos cuidando tu barrio y compartiendo tus rincones favoritos.</p>
+                    <h2 class="font-display-lg text-[24px] leading-[30px] font-bold text-on-surface mt-xs">Tu eres el corazon de Jujuy</h2>
+                    <p class="font-body-md text-on-surface-variant text-sm mt-1">Suma puntos cuidando tu barrio y recomendando lugares.</p>
                 </div>
             </div>
 
@@ -380,18 +455,27 @@
                     Acciones del Residente
                 </h3>
                 <div class="flex flex-col gap-sm">
-                    <button class="btn-residente-accion text-left bg-surface-container-low p-md rounded-xl shadow-sm border border-outline-variant flex items-center gap-md hover:shadow-md transition-all" data-puntos="50" data-msg="Tesoro oculto recomendado">
-                        <div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-on-secondary-container">diamond</span>
+                    <div class="bg-surface-container-low p-md rounded-xl shadow-sm border border-outline-variant flex flex-col gap-sm hover:shadow-md transition-all">
+                        <div class="flex items-center gap-md">
+                            <div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-on-secondary-container">diamond</span>
+                            </div>
+                            <div class="flex-1">
+                                <span class="font-label-lg text-on-surface block font-bold">Recomendar un Tesoro Oculto</span>
+                                <span class="font-body-md text-xs text-on-surface-variant">Genera tu recomendacion para que los turistas la ingresen. Ambos sumaran puntos.</span>
+                            </div>
+                            <span class="font-label-sm text-secondary font-bold shrink-0">+50 pts</span>
                         </div>
-                        <div class="flex-1">
-                            <span class="font-label-lg text-on-surface block font-bold">Recomendar un Tesoro Oculto</span>
-                            <span class="font-body-md text-xs text-on-surface-variant">Comparte un lugar favorito para los turistas.</span>
+                        <div class="flex gap-sm mt-2">
+                            <input type="text" id="residente-lugar-recomendar" placeholder="Lugar (ej: Parque Botanico)" class="flex-1 p-2 rounded-xl bg-surface border border-outline-variant text-xs focus:outline-none"/>
+                            <button id="btn-generar-recomendar" class="px-4 py-2 bg-secondary text-on-secondary rounded-xl text-xs font-bold shadow-sm">Generar</button>
                         </div>
-                        <span class="font-label-sm text-secondary font-bold shrink-0">+50 pts</span>
-                    </button>
+                        <div id="box-codigo-generado" class="hidden p-3 bg-surface-container rounded-xl text-center border border-dashed border-outline font-mono text-sm text-primary">
+                            Codigo a compartir: <span id="codigo-generado" class="font-bold"></span>
+                        </div>
+                    </div>
 
-                    <button class="btn-residente-accion text-left bg-surface-container-low p-md rounded-xl shadow-sm border border-outline-variant flex items-center gap-md hover:shadow-md transition-all" data-puntos="100" data-msg="Reporte ambiental validado">
+                    <button class="btn-residente-accion text-left bg-surface-container-low p-md rounded-xl shadow-sm border border-outline-variant flex items-center gap-md hover:shadow-md transition-all w-full" data-puntos="100" data-msg="Reporte ambiental validado">
                         <div class="w-12 h-12 rounded-full bg-tertiary-container flex items-center justify-center shrink-0">
                             <span class="material-symbols-outlined text-on-tertiary-container">park</span>
                         </div>
@@ -407,20 +491,20 @@
             <!-- Tabla de posiciones / Leaderboard -->
             <div class="flex flex-col gap-md">
                 <h3 class="font-headline-md text-[18px]">Impacto en el Barrio</h3>
-                <div class="bg-surface-container rounded-2xl shadow-sm overflow-hidden flex flex-col border border-outline-variant">
+                <div class="bg-surface-container rounded-2xl shadow-sm overflow-hidden flex flex-col border border-outline-variant" id="leaderboard-ranking">
                     <div class="flex items-center gap-md p-md border-b border-outline-variant">
                         <div class="font-bold text-primary w-8">1</div>
                         <div class="flex-1">
-                            <span class="font-label-lg text-on-surface block font-bold">María L.</span>
-                            <span class="text-xs text-on-surface-variant">4 reportes ecológicos</span>
+                            <span class="font-label-lg text-on-surface block font-bold">Maria L.</span>
+                            <span class="text-xs text-on-surface-variant">4 reportes ecologicos</span>
                         </div>
                         <span class="font-label-lg text-tertiary-fixed-dim font-bold">3450 pts</span>
                     </div>
-                    <div class="flex items-center gap-md p-md">
+                    <div class="flex items-center gap-md p-md border-b border-outline-variant">
                         <div class="font-bold text-on-surface-variant w-8">2</div>
                         <div class="flex-1">
                             <span class="font-label-lg text-on-surface block font-bold">Carlos R.</span>
-                            <span class="text-xs text-on-surface-variant">12 consejos turísticos</span>
+                            <span class="text-xs text-on-surface-variant">12 consejos turisticos</span>
                         </div>
                         <span class="font-label-lg text-on-surface font-bold">2890 pts</span>
                     </div>
@@ -435,23 +519,32 @@
                 <p class="font-body-md text-on-surface-variant">Métricas en tiempo real y gestión municipal.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-md">
                 <div class="flex flex-col p-md rounded-xl bg-surface-container shadow-sm gap-xs border border-outline-variant">
                     <div class="flex items-center gap-xs text-secondary">
                         <span class="material-symbols-outlined text-[20px]">groups</span>
-                        <span class="font-label-sm uppercase tracking-wider text-on-surface-variant">Turistas Activos</span>
+                        <span class="font-label-sm uppercase tracking-wider text-on-surface-variant">Registrados</span>
                     </div>
-                    <div class="font-display-lg text-primary text-3xl font-bold mt-2">1,204</div>
+                    <div class="font-display-lg text-primary text-3xl font-bold mt-2" id="admin-total-usuarios">42</div>
                     <span class="text-xs text-tertiary-container bg-tertiary-fixed w-fit px-2 py-0.5 rounded-full mt-2">+12% hoy</span>
+                </div>
+
+                <div class="flex flex-col p-md rounded-xl bg-surface-container shadow-sm gap-xs border border-outline-variant">
+                    <div class="flex items-center gap-xs text-secondary-container">
+                        <span class="material-symbols-outlined text-[20px]">star</span>
+                        <span class="font-label-sm uppercase tracking-wider text-on-surface-variant">Dia Pico</span>
+                    </div>
+                    <div class="font-display-lg text-primary text-3xl font-bold mt-2">Sabado</div>
+                    <span class="text-xs text-on-surface-variant mt-2">Mayor flujo turistico</span>
                 </div>
 
                 <div class="flex flex-col p-md rounded-xl bg-surface-container shadow-sm gap-xs justify-between border border-outline-variant">
                     <div class="flex items-center gap-xs text-secondary-container">
-                        <span class="material-symbols-outlined text-[20px]">star</span>
-                        <span class="font-label-sm uppercase tracking-wider text-on-surface-variant">Misión Más Popular</span>
+                        <span class="material-symbols-outlined text-[20px]">tour</span>
+                        <span class="font-label-sm uppercase tracking-wider text-on-surface-variant">Mision Top</span>
                     </div>
                     <div class="font-body-lg font-semibold text-primary mt-2">Cabildo de Jujuy</div>
-                    <span class="text-xs text-on-surface-variant">840 validaciones esta semana</span>
+                    <span class="text-xs text-on-surface-variant">840 validaciones totales</span>
                 </div>
             </div>
 

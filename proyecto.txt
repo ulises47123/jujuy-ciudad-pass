@@ -1,16 +1,16 @@
 Proyecto: Plataforma Web "Jujuy Ciudad Pass"
 
 ¿Qué estoy creando?
-Estoy desarrollando una aplicación web (compuesta por HTML, CSS y JavaScript) que materializa el concepto del pasaporte turístico digital "Jujuy Ciudad Pass". La interfaz está estructurada modularmente y cuenta con interacciones funcionales para:
-- Registro de turistas con asignación de bonus por grupo.
-- Completado de misiones con un sistema de gamificación (acumulación de puntos por lectura de códigos QR, ubicación y respuestas).
-- Acciones de recomendación y cuidado ambiental para residentes (suman "Puntos de Comunidad").
-- Panel de gestión para ver métricas de visitas y agregar nuevas misiones y puntos.
-
-La interfaz visual fue mejorada considerablemente, respetando estrictamente la paleta de colores institucional requerida en los diseños originales (Azul Marino, Fucsia, Verde y Naranja).
+Estoy desarrollando una aplicación web adaptada para móviles y PC (HTML, CSS con Tailwind CDN y JavaScript). Esta versión incluye:
+- Flujo inicial de bienvenida que consulta al usuario si es nuevo o ya tiene cuenta.
+- Registro completo para nuevos usuarios (turista o residente) iniciando desde 0 puntos.
+- Acceso para usuarios existentes (por ejemplo, "Mateo Garcia", "Carlos R.", "Maria L.") con carga y persistencia local de sus puntos anteriores mediante LocalStorage.
+- Registro de misiones con preguntas patrimoniales específicas de validación (Cabildo de Jujuy y Parque Botánico Municipal).
+- Un sistema de recomendación cruzada donde un residente genera una recomendación con su nombre, y si el turista la ingresa, ambos obtienen un bono adicional de 50 puntos al validar una misión.
+- Un panel administrativo que muestra métricas del total de usuarios registrados en el sistema, día de mayor tráfico y una interfaz para añadir nuevas misiones de forma dinámica.
 
 ¿Para quién va dirigido?
 El proyecto va dirigido principalmente a tres actores clave:
-1. El Turista (nacional o extranjero): Que busca conocer San Salvador de Jujuy, descubrir rutas, realizar misiones en atractivos (históricos, naturales, culturales) y obtener beneficios y descuentos en comercios locales.
-2. El Residente Local (jujeño): Que utilizará la plataforma para redescubrir su propia ciudad, actuar como embajador local recomendando lugares a los turistas y participar en acciones responsables (sin competir con el turista).
-3. La Administración (Municipalidad de San Salvador de Jujuy y comercios adheridos): Quienes obtendrán información estadística valiosa para diversificar los circuitos turísticos, fomentar el consumo local y gestionar los datos sobre qué atractivos son más o menos visitados.
+1. El Turista (nacional o extranjero): Quien acumula puntos y desbloquea descuentos y recompensas.
+2. El Residente Local (jujeño): Quien actúa como embajador local y gana puntos por recomendaciones y acciones ecológicas.
+3. La Administración (Municipalidad de San Salvador de Jujuy): Para gestionar las misiones y recolectar estadísticas valiosas sobre el turismo de la ciudad de manera anónima.

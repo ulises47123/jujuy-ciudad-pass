@@ -1,11 +1,49 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Variables de estado
-    let currentProfile = 'turista';
-    let userPoints = 1250;
-    let completedMissions = 2;
-    let groupBonusActive = false;
+    // Inicializar base de usuarios simulada en LocalStorage
+    const defaultUsers = {
+        "Mateo Garcia": {
+            name: "Mateo Garcia",
+            type: "turista",
+            points: 1250,
+            location: "Argentina",
+            completed: 2,
+            group: true
+        },
+        "Carlos R.": {
+            name: "Carlos R.",
+            type: "residente",
+            points: 2890,
+            barrio: "Barrio Centro",
+            completed: 0,
+            group: false
+        },
+        "Maria L.": {
+            name: "Maria L.",
+            type: "residente",
+            points: 3450,
+            barrio: "Barrio Centro",
+            completed: 0,
+            group: false
+        }
+    };
 
-    // Datos de preguntas para simular misiones
+    if (!localStorage.getItem('jujuy_pass_users')) {
+        localStorage.setItem('jujuy_pass_users', JSON.stringify(defaultUsers));
+    }
+
+    function getUsersDb() {
+        return JSON.parse(localStorage.getItem('jujuy_pass_users'));
+    }
+
+    function saveUsersDb(db) {
+        localStorage.setItem('jujuy_pass_users', JSON.stringify(db));
+    }
+
+    // Estado del usuario activo
+    let currentUser = null;
+    let recommendationAppliedBy = null; // Guarda si un residente recomendó al turista actual
+
+    // Preguntas para las misiones
     const misionesData = {
         cabildo: {
             titulo: 'Cabildo de Jujuy',
@@ -40,8 +78,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Referencias del DOM
+    const modalBienvenida = document.getElementById('modal-bienvenida');
+    const modalLogin = document.getElementById('modal-login');
     const modalSeleccion = document.getElementById('modal-seleccion-perfil');
+    
     const formTuristaSection = document.getElementById('form-turista-section');
+    const formResidenteSection = document.getElementById('form-residente-section');
+    
     const viewHome = document.getElementById('view-home');
     const viewMisiones = document.getElementById('view-misiones');
     const viewComunidad = document.getElementById('view-comunidad');
@@ -52,57 +95,143 @@ document.addEventListener('DOMContentLoaded', () => {
     const navComunidad = document.getElementById('nav-comunidad');
     const navAdmin = document.getElementById('nav-admin');
 
-    // Botones de selección de perfil
-    document.getElementById('sel-turista').addEventListener('click', () => setPerfil('turista'));
-    document.getElementById('sel-residente').addEventListener('click', () => setPerfil('residente'));
-    document.getElementById('sel-admin').addEventListener('click', () => setPerfil('admin'));
-    document.getElementById('btn-cambiar-perfil').addEventListener('click', () => {
+    const inputCodeRecommend = document.getElementById('input-code-recommend');
+    const btnApplyRecommend = document.getElementById('btn-apply-recommend');
+    const recommendStatusMsg = document.getElementById('recommend-status-msg');
+
+    // Inicialización del flujo de bienvenida
+    document.getElementById('btn-usuario-nuevo').addEventListener('click', () => {
+        modalBienvenida.classList.add('hidden');
         modalSeleccion.classList.remove('hidden');
+    });
+
+    document.getElementById('btn-usuario-existente').addEventListener('click', () => {
+        modalBienvenida.classList.add('hidden');
+        modalLogin.classList.remove('hidden');
+    });
+
+    document.getElementById('btn-login-cancelar').addEventListener('click', () => {
+        modalLogin.classList.add('hidden');
+        modalBienvenida.classList.remove('hidden');
+    });
+
+    // Login Form
+    document.getElementById('form-login-usuario').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const username = document.getElementById('login-username').value.trim();
+        const db = getUsersDb();
+
+        if (db[username]) {
+            currentUser = db[username];
+            modalLogin.classList.add('hidden');
+            alert(`Bienvenido de nuevo, ${currentUser.name}. Se han cargado tus ${currentUser.points} puntos.`);
+            
+            if (currentUser.type === 'turista') {
+                showView('home');
+            } else {
+                showView('comunidad');
+            }
+            actualizarUI();
+        } else {
+            // Si no existe, creamos una con datos por defecto simulando que recupera cuenta anterior
+            currentUser = {
+                name: username,
+                type: 'turista',
+                points: 1250, // Puntos recuperados
+                location: 'Jujuy, Argentina',
+                completed: 2,
+                group: false
+            };
+            db[username] = currentUser;
+            saveUsersDb(db);
+            modalLogin.classList.add('hidden');
+            alert(`Cuenta simulada recuperada para: ${username}. Iniciando con 1250 puntos.`);
+            showView('home');
+            actualizarUI();
+        }
+    });
+
+    // Salir / Cambiar Perfil
+    document.getElementById('btn-cambiar-perfil').addEventListener('click', () => {
+        currentUser = null;
+        recommendationAppliedBy = null;
+        modalBienvenida.classList.remove('hidden');
         formTuristaSection.classList.add('hidden');
+        formResidenteSection.classList.add('hidden');
         hideAllViews();
     });
 
-    // Configuración del perfil
-    function setPerfil(perfil) {
-        currentProfile = perfil;
+    // Botones de selección de perfil (NUEVO USUARIO)
+    document.getElementById('sel-turista').addEventListener('click', () => {
         modalSeleccion.classList.add('hidden');
-        
-        if (perfil === 'turista') {
-            formTuristaSection.classList.remove('hidden');
-            hideAllViews();
-        } else if (perfil === 'residente') {
-            formTuristaSection.classList.add('hidden');
-            document.getElementById('passport-username').innerText = 'Vecino Colaborador';
-            document.getElementById('passport-location').innerText = 'San Salvador de Jujuy';
-            groupBonusActive = false;
-            document.getElementById('bonus-banner').classList.add('hidden');
-            showView('home');
-        } else if (perfil === 'admin') {
-            formTuristaSection.classList.add('hidden');
-            showView('admin');
-        }
-    }
+        formTuristaSection.classList.remove('hidden');
+    });
 
-    // Envío del formulario de turista
+    document.getElementById('sel-residente').addEventListener('click', () => {
+        modalSeleccion.classList.add('hidden');
+        formResidenteSection.classList.remove('hidden');
+    });
+
+    document.getElementById('sel-admin').addEventListener('click', () => {
+        modalSeleccion.classList.add('hidden');
+        currentUser = {
+            name: "Administrador Municipal",
+            type: "admin",
+            points: 0
+        };
+        showView('admin');
+        actualizarUI();
+    });
+
+    // Registro de Turista Nuevo (Inicia con 0 Puntos)
     document.getElementById('form-perfil-turista').addEventListener('submit', (e) => {
         e.preventDefault();
-        const origen = document.getElementById('turista-origen').value;
+        const nombre = document.getElementById('turista-nombre').value.trim();
+        const origen = document.getElementById('turista-origen').value.trim();
         const modalidad = document.getElementById('turista-modalidad').value;
-        
-        document.getElementById('passport-username').innerText = 'Turista Explorador';
-        document.getElementById('passport-location').innerText = origen;
-        
-        if (modalidad === 'familia' || modalidad === 'amigos') {
-            groupBonusActive = true;
-            document.getElementById('bonus-banner').classList.remove('hidden');
-            alert('Modo Grupal activado: Recibirás 15 puntos extra por misión.');
-        } else {
-            groupBonusActive = false;
-            document.getElementById('bonus-banner').classList.add('hidden');
-        }
+
+        currentUser = {
+            name: nombre,
+            type: 'turista',
+            points: 0, // Inicia con 0 puntos
+            location: origen,
+            completed: 0,
+            group: (modalidad === 'familia' || modalidad === 'amigos')
+        };
+
+        const db = getUsersDb();
+        db[nombre] = currentUser;
+        saveUsersDb(db);
 
         formTuristaSection.classList.add('hidden');
+        alert(`Registro exitoso. Bienvenido, ${nombre}. Comienzas con 0 puntos.`);
         showView('home');
+        actualizarUI();
+    });
+
+    // Registro de Residente Nuevo (Inicia con 0 Puntos)
+    document.getElementById('form-perfil-residente').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nombre = document.getElementById('residente-nombre').value.trim();
+        const barrio = document.getElementById('residente-barrio').value.trim();
+
+        currentUser = {
+            name: nombre,
+            type: 'residente',
+            points: 0, // Inicia con 0 puntos
+            barrio: barrio,
+            completed: 0,
+            group: false
+        };
+
+        const db = getUsersDb();
+        db[nombre] = currentUser;
+        saveUsersDb(db);
+
+        formResidenteSection.classList.add('hidden');
+        alert(`Registro exitoso. Bienvenido vecino, ${nombre}. Comienzas con 0 puntos.`);
+        showView('comunidad');
+        actualizarUI();
     });
 
     // Navegación de pestañas
@@ -110,6 +239,10 @@ document.addEventListener('DOMContentLoaded', () => {
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
+            if (!currentUser) {
+                alert('Por favor selecciona o inicia sesión con tu perfil primero.');
+                return;
+            }
             const path = item.getAttribute('data-path');
             showView(path);
         });
@@ -218,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modalMision.classList.remove('hidden');
     }
 
-    // Submit del cuestionario de misión
+    // Submit del cuestionario de misión (Valida respuestas)
     document.getElementById('form-verificar-preguntas').addEventListener('submit', (e) => {
         e.preventDefault();
         const id = document.getElementById('modal-mision-id').value;
@@ -235,12 +368,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (correctas) {
             let ptsGanados = basePts;
-            if (groupBonusActive) {
+            
+            // Asignar bono de grupo si aplica
+            if (currentUser.group) {
                 ptsGanados += 15;
             }
 
-            userPoints += ptsGanados;
-            completedMissions += 1;
+            // Asignar bono de recomendación de residente
+            if (recommendationAppliedBy) {
+                ptsGanados += 50;
+                
+                // Dar puntos al residente que recomendó
+                const db = getUsersDb();
+                if (db[recommendationAppliedBy]) {
+                    db[recommendationAppliedBy].points += 50;
+                    saveUsersDb(db);
+                }
+                alert(`¡Se aplicó la recomendación de ${recommendationAppliedBy}! Sumas 50 puntos extra y el residente también recibe 50 puntos.`);
+                recommendationAppliedBy = null;
+                document.getElementById('tourist-recommendation-box').classList.add('hidden');
+            }
+
+            currentUser.points += ptsGanados;
+            currentUser.completed += 1;
+
+            // Guardar cambios en DB local
+            const db = getUsersDb();
+            db[currentUser.name] = currentUser;
+            saveUsersDb(db);
             
             actualizarUI();
             modalMision.classList.add('hidden');
@@ -259,13 +414,54 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Acciones de comunidad
+    // Aplicar código de recomendación de residente en perfil turista
+    btnApplyRecommend.addEventListener('click', () => {
+        const cod = inputCodeRecommend.value.trim();
+        const db = getUsersDb();
+
+        if (db[cod] && db[cod].type === 'residente') {
+            recommendationAppliedBy = cod;
+            recommendStatusMsg.innerText = `Recomendación válida de: ${cod}. Se acreditarán 50 pts extra en tu próxima misión completada.`;
+            recommendStatusMsg.classList.remove('hidden', 'text-error');
+            recommendStatusMsg.classList.add('text-secondary');
+        } else {
+            recommendStatusMsg.innerText = `El residente "${cod}" no existe en el sistema. Los residentes nuevos deben registrarse previamente.`;
+            recommendStatusMsg.classList.remove('hidden', 'text-secondary');
+            recommendStatusMsg.classList.add('text-error');
+        }
+    });
+
+    // Generar código de recomendación en perfil Residente
+    document.getElementById('btn-generar-recomendar').addEventListener('click', () => {
+        const lugar = document.getElementById('residente-lugar-recomendar').value.trim();
+        if (!lugar) {
+            alert('Por favor escribe el nombre del lugar a recomendar.');
+            return;
+        }
+
+        const box = document.getElementById('box-codigo-generado');
+        const codeSpan = document.getElementById('codigo-generado');
+        
+        // El código es simplemente el nombre del residente que el turista ingresará
+        codeSpan.innerText = currentUser.name;
+        box.classList.remove('hidden');
+        
+        alert(`Código generado. Comparte tu nombre de usuario "${currentUser.name}" con el turista para que ambos sumen puntos.`);
+    });
+
+    // Acciones generales de residente
     const btnsComunidadAccion = document.querySelectorAll('.btn-residente-accion');
     btnsComunidadAccion.forEach(btn => {
         btn.addEventListener('click', () => {
             const pts = parseInt(btn.getAttribute('data-puntos'));
             const msg = btn.getAttribute('data-msg');
-            userPoints += pts;
+            currentUser.points += pts;
+            
+            // Guardar cambios en DB local
+            const db = getUsersDb();
+            db[currentUser.name] = currentUser;
+            saveUsersDb(db);
+
             actualizarUI();
             alert(`Acción registrada: "${msg}". Sumaste ${pts} puntos.`);
         });
@@ -280,7 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Formulario de administración (agregar misiones)
     document.getElementById('form-nueva-mision').addEventListener('submit', (e) => {
         e.preventDefault();
-        const nombre = document.getElementById('admin-mision-nombre').value;
+        const nombre = document.getElementById('admin-mision-nombre').value.trim();
         const categoria = document.getElementById('admin-mision-cat').value;
         const puntos = parseInt(document.getElementById('admin-mision-puntos').value);
         const id = nombre.toLowerCase().replace(/\s+/g, '-');
@@ -324,20 +520,67 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('form-nueva-mision').reset();
     });
 
-    // Actualizar la interfaz
+    // Actualizar la interfaz basada en el usuario activo
     function actualizarUI() {
-        document.getElementById('animated-points').innerText = userPoints;
-        document.getElementById('misiones-contador').innerText = completedMissions;
-        
+        if (!currentUser) return;
+
+        // Actualizar saludo y pasaporte
+        document.getElementById('saludo-usuario').innerText = currentUser.name;
+        document.getElementById('passport-username').innerText = currentUser.name;
+        document.getElementById('passport-location').innerText = currentUser.type === 'turista' ? (currentUser.location || 'Argentina') : (currentUser.barrio || 'Jujuy');
+        document.getElementById('animated-points').innerText = currentUser.points;
+        document.getElementById('misiones-contador').innerText = currentUser.completed;
+
+        // Ocultar o mostrar caja de recomendación en base al rol de turista
+        const recomendacionBox = document.getElementById('tourist-recommendation-box');
+        if (currentUser.type === 'turista') {
+            recomendacionBox.classList.remove('hidden');
+        } else {
+            recomendacionBox.classList.add('hidden');
+        }
+
+        // Mostrar / ocultar bono de grupo
+        if (currentUser.group) {
+            document.getElementById('bonus-banner').classList.remove('hidden');
+        } else {
+            document.getElementById('bonus-banner').classList.add('hidden');
+        }
+
         // Progreso para nivel 5 (meta 1500)
-        let restantes = 1500 - userPoints;
+        let restantes = 1500 - currentUser.points;
         if (restantes < 0) restantes = 0;
         document.getElementById('pts-faltantes').innerText = `${restantes} pts para el siguiente nivel`;
         
-        let porcentaje = (userPoints / 1500) * 100;
+        let porcentaje = (currentUser.points / 1500) * 100;
         if (porcentaje > 100) porcentaje = 100;
         document.getElementById('barra-progreso').style.width = `${porcentaje}%`;
-    }
 
-    actualizarUI();
+        // Renderizar tabla de posiciones en vivo
+        const db = getUsersDb();
+        const leaderboard = document.getElementById('leaderboard-ranking');
+        leaderboard.innerHTML = '';
+        
+        // Filtrar residentes, ordenar de mayor a menor puntaje
+        const residentes = Object.values(db)
+            .filter(u => u.type === 'residente')
+            .sort((a, b) => b.points - a.points);
+        
+        residentes.forEach((res, index) => {
+            const div = document.createElement('div');
+            div.className = `flex items-center gap-md p-md ${index < residentes.length - 1 ? 'border-b border-outline-variant' : ''}`;
+            div.innerHTML = `
+                <div class="font-bold text-primary w-8">${index + 1}</div>
+                <div class="flex-1">
+                    <span class="font-label-lg text-on-surface block font-bold">${res.name}</span>
+                    <span class="text-xs text-on-surface-variant">${res.barrio || 'Residente'}</span>
+                </div>
+                <span class="font-label-lg text-tertiary-fixed-dim font-bold">${res.points} pts</span>
+            `;
+            leaderboard.appendChild(div);
+        });
+
+        // Actualizar datos del Administrador
+        const totalUsuarios = Object.keys(db).length;
+        document.getElementById('admin-total-usuarios').innerText = totalUsuarios;
+    }
 });
