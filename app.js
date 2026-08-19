@@ -36,7 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    if (!localStorage.getItem('jujuy_pass_users')) {
+    const existingUsers = localStorage.getItem('jujuy_pass_users');
+    if (!existingUsers || !JSON.parse(existingUsers)["Mateo Garcia"]) {
         localStorage.setItem('jujuy_pass_users', JSON.stringify(defaultUsers));
     }
 
@@ -242,23 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             actualizarUI();
         } else {
-            currentUser = {
-                name: username,
-                type: 'turista',
-                points: 1250,
-                location: 'Jujuy, Argentina',
-                completed: 2,
-                group: false,
-                estadia: "pleno",
-                insignias: ["Guardián del Patrimonio"],
-                cupones: []
-            };
-            db[username] = currentUser;
-            saveUsersDb(db);
-            modalLogin.classList.add('hidden');
-            alert(`Cuenta creada y recuperada para: ${username}. Iniciando con 1250 puntos.`);
-            showView('home');
-            actualizarUI();
+            alert(`Error: El usuario "${username}" no existe. Si eres nuevo, por favor regresa y registrate como usuario nuevo.`);
         }
     });
 
