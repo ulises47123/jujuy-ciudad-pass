@@ -7,7 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
             points: 1250,
             location: "Argentina",
             completed: 2,
-            group: true
+            group: true,
+            estadia: "pleno", // 2 días
+            insignias: ["Guardián del Patrimonio"],
+            cupones: []
         },
         "Carlos R.": {
             name: "Carlos R.",
@@ -15,7 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
             points: 2890,
             barrio: "Barrio Centro",
             completed: 0,
-            group: false
+            group: false,
+            estadia: "",
+            insignias: ["Embajador Local"],
+            cupones: []
         },
         "Maria L.": {
             name: "Maria L.",
@@ -23,12 +29,29 @@ document.addEventListener('DOMContentLoaded', () => {
             points: 3450,
             barrio: "Barrio Centro",
             completed: 0,
-            group: false
+            group: false,
+            estadia: "",
+            insignias: ["Embajador Local", "Turista Responsable"],
+            cupones: []
         }
     };
 
     if (!localStorage.getItem('jujuy_pass_users')) {
         localStorage.setItem('jujuy_pass_users', JSON.stringify(defaultUsers));
+    }
+
+    // Inicializar base de visitas en LocalStorage
+    const defaultVisitas = {
+        "cabildo": 342,
+        "botanico": 185,
+        "corredor-sabores": 95,
+        "pachamama-ofrenda": 54,
+        "carrozas-primavera": 12,
+        "carnaval-desentierro": 8
+    };
+
+    if (!localStorage.getItem('jujuy_pass_visitas')) {
+        localStorage.setItem('jujuy_pass_visitas', JSON.stringify(defaultVisitas));
     }
 
     function getUsersDb() {
@@ -39,14 +62,24 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('jujuy_pass_users', JSON.stringify(db));
     }
 
-    // Estado del usuario activo
+    function getVisitasDb() {
+        return JSON.parse(localStorage.getItem('jujuy_pass_visitas'));
+    }
+
+    function saveVisitasDb(db) {
+        localStorage.setItem('jujuy_pass_visitas', JSON.stringify(db));
+    }
+
+    // Estado activo
     let currentUser = null;
-    let recommendationAppliedBy = null; // Guarda si un residente recomendó al turista actual
+    let recommendationAppliedBy = null;
 
     // Preguntas para las misiones
     const misionesData = {
         cabildo: {
             titulo: 'Cabildo de Jujuy',
+            categoria: 'Historico',
+            insignia: 'Guardián del Patrimonio',
             preguntas: [
                 {
                     q: '¿En qué año se fundó el Cabildo de Jujuy?',
@@ -62,6 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         botanico: {
             titulo: 'Parque Botánico Municipal',
+            categoria: 'Naturaleza',
+            insignia: 'Explorador Verde',
             preguntas: [
                 {
                     q: '¿Qué ecosistema protege principalmente este parque?',
@@ -72,6 +107,54 @@ document.addEventListener('DOMContentLoaded', () => {
                     q: '¿Cuál es el ave emblemática que se puede avistar en la reserva?',
                     options: ['Tucán Grande', 'Cóndor Andino', 'Hornero'],
                     correct: 'Tucán Grande'
+                }
+            ]
+        },
+        'corredor-sabores': {
+            titulo: 'Corredor Gastronómico Paseo Pachamama',
+            categoria: 'Sabores',
+            insignia: 'Embajador Gastronómico',
+            preguntas: [
+                {
+                    q: '¿Cuál es el ingrediente base de la tradicional humita jujeña?',
+                    options: ['Maíz choclo rallado', 'Carne de llama desmechada', 'Harina de trigo'],
+                    correct: 'Maíz choclo rallado'
+                }
+            ]
+        },
+        'pachamama-ofrenda': {
+            titulo: 'Ofrenda en el Mercado 6 de Agosto',
+            categoria: 'Estacional',
+            insignia: 'Alma Jujeña',
+            preguntas: [
+                {
+                    q: '¿En honor a quién se realiza la ofrenda del sahumado en Jujuy?',
+                    options: ['La Pachamama (Madre Tierra)', 'El Dios del Sol', 'Los Reyes Magos'],
+                    correct: 'La Pachamama (Madre Tierra)'
+                }
+            ]
+        },
+        'carrozas-primavera': {
+            titulo: 'Desfile de Carrozas en Ciudad Cultural',
+            categoria: 'Estacional',
+            insignia: 'Embajador Local',
+            preguntas: [
+                {
+                    q: '¿Quiénes construyen las famosas carrozas de la Fiesta Nacional de los Estudiantes?',
+                    options: ['Los estudiantes de secundaria', 'Empresas privadas de turismo', 'Artistas plásticos contratados'],
+                    correct: 'Los estudiantes de secundaria'
+                }
+            ]
+        },
+        'carnaval-desentierro': {
+            titulo: 'Circuito de Comparsa y Desentierro del Diablo',
+            categoria: 'Estacional',
+            insignia: 'Alma Jujeña',
+            preguntas: [
+                {
+                    q: '¿Qué personaje mítico se desentierra para dar inicio a los festejos de carnaval?',
+                    options: ['El diablo del carnaval (Pujllay)', 'El duende de la Puna', 'El Coquena'],
+                    correct: 'El diablo del carnaval (Pujllay)'
                 }
             ]
         }
@@ -99,6 +182,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnApplyRecommend = document.getElementById('btn-apply-recommend');
     const recommendStatusMsg = document.getElementById('recommend-status-msg');
 
+    const seasonSelector = document.getElementById('season-selector');
+    const adminCicloActual = document.getElementById('admin-ciclo-actual');
+
+    // Gestión de Temporadas / Ciclos Estacionales
+    seasonSelector.addEventListener('change', () => {
+        const value = seasonSelector.value;
+        actualizarVisibilidadMisionesEstacionales(value);
+    });
+
+    function actualizarVisibilidadMisionesEstacionales(season) {
+        document.querySelectorAll('.mision-card.estacional').forEach(card => {
+            card.classList.add('hidden');
+        });
+        
+        if (season === 'pachamama') {
+            document.querySelector('.estacional-pachamama').classList.remove('hidden');
+            adminCicloActual.innerText = 'Agosto - Pachamama';
+        } else if (season === 'estudiantes') {
+            document.querySelector('.estacional-estudiantes').classList.remove('hidden');
+            adminCicloActual.innerText = 'Septiembre - Estudiantes';
+        } else if (season === 'carnaval') {
+            document.querySelector('.estacional-carnaval').classList.remove('hidden');
+            adminCicloActual.innerText = 'Febrero - Carnaval';
+        }
+    }
+
     // Inicialización del flujo de bienvenida
     document.getElementById('btn-usuario-nuevo').addEventListener('click', () => {
         modalBienvenida.classList.add('hidden');
@@ -124,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (db[username]) {
             currentUser = db[username];
             modalLogin.classList.add('hidden');
-            alert(`Bienvenido de nuevo, ${currentUser.name}. Se han cargado tus ${currentUser.points} puntos.`);
+            alert(`Bienvenido de nuevo, ${currentUser.name}. Se han cargado tus datos.`);
             
             if (currentUser.type === 'turista') {
                 showView('home');
@@ -133,19 +242,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             actualizarUI();
         } else {
-            // Si no existe, creamos una con datos por defecto simulando que recupera cuenta anterior
             currentUser = {
                 name: username,
                 type: 'turista',
-                points: 1250, // Puntos recuperados
+                points: 1250,
                 location: 'Jujuy, Argentina',
                 completed: 2,
-                group: false
+                group: false,
+                estadia: "pleno",
+                insignias: ["Guardián del Patrimonio"],
+                cupones: []
             };
             db[username] = currentUser;
             saveUsersDb(db);
             modalLogin.classList.add('hidden');
-            alert(`Cuenta simulada recuperada para: ${username}. Iniciando con 1250 puntos.`);
+            alert(`Cuenta creada y recuperada para: ${username}. Iniciando con 1250 puntos.`);
             showView('home');
             actualizarUI();
         }
@@ -188,15 +299,19 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const nombre = document.getElementById('turista-nombre').value.trim();
         const origen = document.getElementById('turista-origen').value.trim();
+        const tiempo = document.getElementById('turista-tiempo').value;
         const modalidad = document.getElementById('turista-modalidad').value;
 
         currentUser = {
             name: nombre,
             type: 'turista',
-            points: 0, // Inicia con 0 puntos
+            points: 0,
             location: origen,
             completed: 0,
-            group: (modalidad === 'familia' || modalidad === 'amigos')
+            group: (modalidad === 'familia' || modalidad === 'amigos' || modalidad === 'grupo'),
+            estadia: tiempo,
+            insignias: [],
+            cupones: []
         };
 
         const db = getUsersDb();
@@ -218,10 +333,13 @@ document.addEventListener('DOMContentLoaded', () => {
         currentUser = {
             name: nombre,
             type: 'residente',
-            points: 0, // Inicia con 0 puntos
+            points: 0,
             barrio: barrio,
             completed: 0,
-            group: false
+            group: false,
+            estadia: "",
+            insignias: [],
+            cupones: []
         };
 
         const db = getUsersDb();
@@ -384,13 +502,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     db[recommendationAppliedBy].points += 50;
                     saveUsersDb(db);
                 }
-                alert(`¡Se aplicó la recomendación de ${recommendationAppliedBy}! Sumas 50 puntos extra y el residente también recibe 50 puntos.`);
+                alert(`Recomendacion de ${recommendationAppliedBy} aplicada. Sumas 50 puntos extra y el residente recibe 50 puntos.`);
                 recommendationAppliedBy = null;
                 document.getElementById('tourist-recommendation-box').classList.add('hidden');
             }
 
             currentUser.points += ptsGanados;
             currentUser.completed += 1;
+
+            // Asignar insignia por la categoría
+            if (datos.insignia && !currentUser.insignias.includes(datos.insignia)) {
+                currentUser.insignias.push(datos.insignia);
+                alert(`Has ganado una nueva insignia: "${datos.insignia}"`);
+            }
+
+            // Registrar visita en estadísticas
+            const visitas = getVisitasDb();
+            if (visitas[id] !== undefined) {
+                visitas[id] += 1;
+            } else {
+                visitas[id] = 1;
+            }
+            saveVisitasDb(visitas);
 
             // Guardar cambios en DB local
             const db = getUsersDb();
@@ -408,10 +541,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.className = 'mt-2 px-4 py-2 bg-outline-variant text-outline rounded-xl text-label-sm font-bold self-start cursor-default';
             }
 
-            alert(`Felicidades, respondiste correctamente y sumaste ${ptsGanados} puntos.`);
+            alert(`Mision completada correctamente. Sumaste ${ptsGanados} puntos.`);
         } else {
-            alert('Respuestas incorrectas. Por favor lee la cartelería informativa y vuelve a intentarlo.');
+            alert('Respuestas incorrectas. Por favor lee la cartelería informativa e intenta de nuevo.');
         }
+    });
+
+    // Tienda de Recompensas (Canjear puntos por cupones)
+    const btnsCanjear = document.querySelectorAll('.btn-canjear');
+    btnsCanjear.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (!currentUser) return;
+            
+            const costo = parseInt(btn.getAttribute('data-costo'));
+            const premio = btn.getAttribute('data-premio');
+
+            if (currentUser.points >= costo) {
+                currentUser.points -= costo;
+                
+                // Generar cupón al azar
+                const codigoCupon = `CUPON-${premio.toUpperCase().substring(0, 3)}-${Math.floor(1000 + Math.random() * 9000)}`;
+                currentUser.cupones.push(`${premio} (${codigoCupon})`);
+
+                // Guardar cambios en DB local
+                const db = getUsersDb();
+                db[currentUser.name] = currentUser;
+                saveUsersDb(db);
+
+                actualizarUI();
+                alert(`Canje exitoso. Obtuviste el cupon: ${codigoCupon}`);
+            } else {
+                alert(`Puntos insuficientes. Necesitas ${costo} puntos para este beneficio.`);
+            }
+        });
     });
 
     // Aplicar código de recomendación de residente en perfil turista
@@ -421,11 +583,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (db[cod] && db[cod].type === 'residente') {
             recommendationAppliedBy = cod;
-            recommendStatusMsg.innerText = `Recomendación válida de: ${cod}. Se acreditarán 50 pts extra en tu próxima misión completada.`;
+            recommendStatusMsg.innerText = `Recomendacion valida de: ${cod}. Se acreditaran 50 pts extra en tu proxima mision completada.`;
             recommendStatusMsg.classList.remove('hidden', 'text-error');
             recommendStatusMsg.classList.add('text-secondary');
         } else {
-            recommendStatusMsg.innerText = `El residente "${cod}" no existe en el sistema. Los residentes nuevos deben registrarse previamente.`;
+            recommendStatusMsg.innerText = `El residente "${cod}" no se encuentra registrado en el sistema.`;
             recommendStatusMsg.classList.remove('hidden', 'text-secondary');
             recommendStatusMsg.classList.add('text-error');
         }
@@ -442,11 +604,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const box = document.getElementById('box-codigo-generado');
         const codeSpan = document.getElementById('codigo-generado');
         
-        // El código es simplemente el nombre del residente que el turista ingresará
+        // El código es simplemente el nombre del residente
         codeSpan.innerText = currentUser.name;
         box.classList.remove('hidden');
         
-        alert(`Código generado. Comparte tu nombre de usuario "${currentUser.name}" con el turista para que ambos sumen puntos.`);
+        alert(`Comparte tu nombre de usuario "${currentUser.name}" con el turista para que ambos sumen puntos.`);
     });
 
     // Acciones generales de residente
@@ -457,6 +619,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const msg = btn.getAttribute('data-msg');
             currentUser.points += pts;
             
+            // Asignar insignia de embajador si pasa los 3000 puntos
+            if (currentUser.points >= 3000 && !currentUser.insignias.includes("Embajador Local")) {
+                currentUser.insignias.push("Embajador Local");
+                alert("¡Felicidades! Has sido nombrado Embajador Local de Jujuy por tu nivel de participación.");
+            }
+
             // Guardar cambios en DB local
             const db = getUsersDb();
             db[currentUser.name] = currentUser;
@@ -467,9 +635,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Simular Escaneo General (FAB del Home)
+    // Simular Escaneo General
     document.getElementById('btn-scan-qr').addEventListener('click', () => {
-        alert('Simulador de escaneo: escanea un código QR en el Cabildo o Parque Botánico abriendo la pestaña de Misiones.');
+        alert('Simulador de escaneo: escanea un codigo QR en el Cabildo o Parque Botanico abriendo la pestaña de Misiones.');
         showView('misiones');
     });
 
@@ -481,17 +649,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const puntos = parseInt(document.getElementById('admin-mision-puntos').value);
         const id = nombre.toLowerCase().replace(/\s+/g, '-');
 
-        // Agregar datos de preguntas para la simulación
         misionesData[id] = {
             titulo: nombre,
+            categoria: categoria,
+            insignia: categoria === 'Historico' ? 'Guardián del Patrimonio' : 'Explorador Verde',
             preguntas: [
                 {
-                    q: 'Pregunta de validación rápida para esta nueva ubicación:',
-                    options: ['Opción correcta (Verdadero)', 'Opción incorrecta (Falso)'],
-                    correct: 'Opción correcta (Verdadero)'
+                    q: 'Pregunta de validacion rapida para esta nueva ubicacion:',
+                    options: ['Opcion correcta (Verdadero)', 'Opcion incorrecta (Falso)'],
+                    correct: 'Opcion correcta (Verdadero)'
                 }
             ]
         };
+
+        // Registrar en estadísticas de visitas iniciales
+        const visitas = getVisitasDb();
+        visitas[id] = 0;
+        saveVisitasDb(visitas);
 
         // Renderizar nueva tarjeta de misión
         const list = document.getElementById('misiones-list-container');
@@ -508,36 +682,49 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+${puntos} pts</span>
                 </div>
                 <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-xs">${nombre}</h3>
-                <p class="text-label-sm text-on-surface-variant">Nueva misión agregada desde el panel administrativo.</p>
+                <p class="text-label-sm text-on-surface-variant">Nueva mision agregada desde el panel administrativo.</p>
                 <button class="btn-mision-activar mt-2 px-4 py-2 bg-secondary text-on-secondary rounded-xl text-label-sm font-bold self-start" data-id="${id}" data-puntos="${puntos}">
-                    Iniciar Misión
+                    Iniciar Mision
                 </button>
             </div>
         `;
 
         list.appendChild(card);
-        alert('Nueva misión agregada exitosamente y publicada en el pasaporte.');
+        alert('Nueva mision agregada exitosamente.');
         document.getElementById('form-nueva-mision').reset();
+        actualizarUI();
     });
 
-    // Actualizar la interfaz basada en el usuario activo
+    // Actualizar la interfaz
     function actualizarUI() {
         if (!currentUser) return;
 
         // Actualizar saludo y pasaporte
         document.getElementById('saludo-usuario').innerText = currentUser.name;
         document.getElementById('passport-username').innerText = currentUser.name;
-        document.getElementById('passport-location').innerText = currentUser.type === 'turista' ? (currentUser.location || 'Argentina') : (currentUser.barrio || 'Jujuy');
+        
+        const pLoc = document.getElementById('passport-location');
+        const subtPasaporte = document.getElementById('subt-pasaporte');
+
+        if (currentUser.type === 'turista') {
+            pLoc.innerText = currentUser.location || 'Argentina';
+            
+            // Texto del tipo de Pasaporte
+            let tipoPass = "Pasaporte Explorador (1 día)";
+            if (currentUser.estadia === "express") tipoPass = "Pasaporte Express (Mediodía)";
+            if (currentUser.estadia === "pleno") tipoPass = "Pasaporte Jujuy a Pleno (2 días)";
+            if (currentUser.estadia === "sinprisa") tipoPass = "Pasaporte Jujuy Sin Prisa (3+ días)";
+            
+            subtPasaporte.innerText = `Tu pasaporte: ${tipoPass}`;
+            document.getElementById('tourist-recommendation-box').classList.remove('hidden');
+        } else {
+            pLoc.innerText = currentUser.barrio || 'San Salvador de Jujuy';
+            subtPasaporte.innerText = "Perfil de Comunidad Residente";
+            document.getElementById('tourist-recommendation-box').classList.add('hidden');
+        }
+
         document.getElementById('animated-points').innerText = currentUser.points;
         document.getElementById('misiones-contador').innerText = currentUser.completed;
-
-        // Ocultar o mostrar caja de recomendación en base al rol de turista
-        const recomendacionBox = document.getElementById('tourist-recommendation-box');
-        if (currentUser.type === 'turista') {
-            recomendacionBox.classList.remove('hidden');
-        } else {
-            recomendacionBox.classList.add('hidden');
-        }
 
         // Mostrar / ocultar bono de grupo
         if (currentUser.group) {
@@ -546,7 +733,36 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('bonus-banner').classList.add('hidden');
         }
 
-        // Progreso para nivel 5 (meta 1500)
+        // Renderizar insignias
+        const insigniasContainer = document.getElementById('insignias-contenedor');
+        insigniasContainer.innerHTML = '';
+        if (currentUser.insignias && currentUser.insignias.length > 0) {
+            currentUser.insignias.forEach(ins => {
+                const span = document.createElement('span');
+                span.className = 'text-[10px] bg-secondary-container text-on-secondary-container font-bold px-2 py-0.5 rounded-md border border-outline-variant';
+                span.innerText = ins;
+                insigniasContainer.appendChild(span);
+            });
+        } else {
+            insigniasContainer.innerHTML = '<span class="text-xs bg-primary-container text-on-primary px-2 py-0.5 rounded-md">Ninguna</span>';
+        }
+
+        // Renderizar cupones
+        const cuponesBox = document.getElementById('cupones-box');
+        const cuponesLista = document.getElementById('cupones-lista');
+        cuponesLista.innerHTML = '';
+        if (currentUser.cupones && currentUser.cupones.length > 0) {
+            cuponesBox.classList.remove('hidden');
+            currentUser.cupones.forEach(cup => {
+                const li = document.createElement('li');
+                li.innerText = cup;
+                cuponesLista.appendChild(li);
+            });
+        } else {
+            cuponesBox.classList.add('hidden');
+        }
+
+        // Progreso para nivel (meta 1500)
         let restantes = 1500 - currentUser.points;
         if (restantes < 0) restantes = 0;
         document.getElementById('pts-faltantes').innerText = `${restantes} pts para el siguiente nivel`;
@@ -555,12 +771,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (porcentaje > 100) porcentaje = 100;
         document.getElementById('barra-progreso').style.width = `${porcentaje}%`;
 
-        // Renderizar tabla de posiciones en vivo
+        // Renderizar tabla de posiciones en vivo (Comunidad)
         const db = getUsersDb();
         const leaderboard = document.getElementById('leaderboard-ranking');
         leaderboard.innerHTML = '';
         
-        // Filtrar residentes, ordenar de mayor a menor puntaje
         const residentes = Object.values(db)
             .filter(u => u.type === 'residente')
             .sort((a, b) => b.points - a.points);
@@ -582,5 +797,40 @@ document.addEventListener('DOMContentLoaded', () => {
         // Actualizar datos del Administrador
         const totalUsuarios = Object.keys(db).length;
         document.getElementById('admin-total-usuarios').innerText = totalUsuarios;
+
+        // Calcular promedio de estadía
+        const turistas = Object.values(db).filter(u => u.type === 'turista');
+        let sumaDias = 0;
+        turistas.forEach(t => {
+            if (t.estadia === "express") sumaDias += 0.5;
+            if (t.estadia === "explorador") sumaDias += 1;
+            if (t.estadia === "pleno") sumaDias += 2;
+            if (t.estadia === "sinprisa") sumaDias += 4;
+        });
+        const promedio = turistas.length > 0 ? (sumaDias / turistas.length).toFixed(1) : 0;
+        document.getElementById('admin-promedio-estadia').innerText = `${promedio} días`;
+
+        // Renderizar tabla de visitas de administrador
+        const visitas = getVisitasDb();
+        const tablaVisitas = document.getElementById('admin-tabla-visitas');
+        tablaVisitas.innerHTML = '';
+        
+        Object.entries(visitas).forEach(([misionId, count]) => {
+            const mData = misionesData[misionId];
+            const titulo = mData ? mData.titulo : misionId;
+            const cat = mData ? mData.categoria : "Personalizado";
+            
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-outline-variant';
+            tr.innerHTML = `
+                <td class="py-2 font-bold">${titulo}</td>
+                <td class="py-2 text-primary font-bold">${count} visitas</td>
+                <td class="py-2 text-on-surface-variant">${cat}</td>
+            `;
+            tablaVisitas.appendChild(tr);
+        });
     }
+
+    // Inicializar visualización de temporada por defecto (Pachamama - Agosto)
+    actualizarVisibilidadMisionesEstacionales('pachamama');
 });

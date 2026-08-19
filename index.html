@@ -115,9 +115,17 @@
                 <span class="material-symbols-outlined text-primary text-[28px]">card_membership</span>
                 <span class="font-headline-md text-body-lg text-primary tracking-tight font-bold">JUJUY CIUDAD PASS</span>
             </div>
-            <button id="btn-cambiar-perfil" class="px-3 py-1 text-label-sm bg-surface-container rounded-full text-primary border border-outline-variant hover:bg-surface-container-high transition-colors">
-                Salir / Cambiar
-            </button>
+            <div class="flex items-center gap-sm">
+                <!-- Selector de Temporada Activa -->
+                <select id="season-selector" class="text-xs bg-surface-container border border-outline-variant rounded-full px-2.5 py-1 text-primary focus:outline-none">
+                    <option value="pachamama">Agosto - Pachamama</option>
+                    <option value="estudiantes">Septiembre - Estudiantes</option>
+                    <option value="carnaval">Febrero - Carnaval</option>
+                </select>
+                <button id="btn-cambiar-perfil" class="px-3 py-1 text-label-sm bg-surface-container rounded-full text-primary border border-outline-variant hover:bg-surface-container-high transition-colors">
+                    Salir / Cambiar
+                </button>
+            </div>
         </div>
     </header>
 
@@ -125,25 +133,25 @@
     <div id="modal-bienvenida" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
         <div class="bg-surface-container-lowest rounded-3xl p-6 shadow-2xl w-full max-w-md flex flex-col gap-lg border border-outline-variant text-center">
             <h2 class="font-headline-lg text-on-surface text-[24px]">Jujuy Ciudad Pass</h2>
-            <p class="font-body-md text-on-surface-variant">Para guardar tus puntos y obtener beneficios, dinos si ya has usado la aplicacion antes.</p>
+            <p class="font-body-md text-on-surface-variant">Para registrar tus misiones, acumular tus puntos y canjear premios, ingresa o registrate.</p>
             
             <div class="flex flex-col gap-sm">
                 <button id="btn-usuario-nuevo" class="w-full py-4 bg-secondary text-on-secondary font-headline-md rounded-2xl shadow-md hover:bg-secondary-container transition-colors">
-                    Soy Usuario Nuevo
+                    Soy Usuario Nuevo (Registrarse)
                 </button>
                 <button id="btn-usuario-existente" class="w-full py-4 bg-primary text-on-primary font-headline-md rounded-2xl shadow-md hover:bg-primary-container transition-colors">
-                    Ya tengo una cuenta
+                    Ya tengo una cuenta (Iniciar Sesión)
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Login (Usuario Existente) -->
+    <!-- Modal Login -->
     <div id="modal-login" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 hidden">
         <div class="bg-surface-container-lowest rounded-3xl p-6 shadow-2xl w-full max-w-md flex flex-col gap-md border border-outline-variant">
             <div class="text-center">
                 <h3 class="font-headline-lg text-[22px] text-primary">Ingresar a mi Cuenta</h3>
-                <p class="font-body-md text-on-surface-variant text-sm mt-1">Escribe tu nombre de usuario para recuperar tus puntos y pasaporte.</p>
+                <p class="font-body-md text-on-surface-variant text-sm mt-1">Escribe tu nombre de usuario exacto para recuperar tu perfil.</p>
             </div>
             <form id="form-login-usuario" class="flex flex-col gap-md">
                 <div>
@@ -160,12 +168,12 @@
         </div>
     </div>
 
-    <!-- Selector de Perfil (Solo para usuarios nuevos) -->
+    <!-- Selector de Perfil -->
     <div id="modal-seleccion-perfil" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 hidden">
         <div class="bg-surface-container-lowest rounded-3xl p-6 shadow-2xl w-full max-w-md flex flex-col gap-lg border border-outline-variant">
             <div class="text-center">
                 <h2 class="font-headline-lg text-on-surface text-[24px] mb-2">Crear Perfil</h2>
-                <p class="font-body-md text-on-surface-variant">Selecciona tu modalidad de participacion en la ciudad.</p>
+                <p class="font-body-md text-on-surface-variant">Selecciona tu modalidad de participación en la ciudad.</p>
             </div>
             <div class="flex flex-col gap-md">
                 <button id="sel-turista" class="w-full p-4 rounded-2xl bg-surface-container text-left border border-outline-variant hover:border-secondary transition-all flex items-center gap-md group">
@@ -173,7 +181,7 @@
                         <span class="material-symbols-outlined text-on-secondary-container text-[24px]">explore</span>
                     </div>
                     <div class="flex-1">
-                        <span class="font-label-lg text-on-surface block group-hover:text-secondary">Soy Turista</span>
+                        <span class="font-label-lg text-on-surface block group-hover:text-secondary font-bold">Soy Turista</span>
                         <span class="font-body-md text-xs text-on-surface-variant">Inicias con 0 puntos. Guarda tus recorridos.</span>
                     </div>
                 </button>
@@ -183,7 +191,7 @@
                         <span class="material-symbols-outlined text-on-tertiary-container text-[24px]">groups</span>
                     </div>
                     <div class="flex-1">
-                        <span class="font-label-lg text-on-surface block group-hover:text-tertiary-fixed-dim">Soy Residente</span>
+                        <span class="font-label-lg text-on-surface block group-hover:text-tertiary-fixed-dim font-bold">Soy Residente</span>
                         <span class="font-body-md text-xs text-on-surface-variant">Inicias con 0 puntos. Recomienda y cuida tu ciudad.</span>
                     </div>
                 </button>
@@ -193,8 +201,8 @@
                         <span class="material-symbols-outlined text-on-primary-container text-[24px]">shield_person</span>
                     </div>
                     <div class="flex-1">
-                        <span class="font-label-lg text-on-surface block group-hover:text-primary">Administracion</span>
-                        <span class="font-body-md text-xs text-on-surface-variant">Gestion de estadisticas y actividades municipales.</span>
+                        <span class="font-label-lg text-on-surface block group-hover:text-primary font-bold">Administración</span>
+                        <span class="font-body-md text-xs text-on-surface-variant">Gestión de estadísticas y actividades municipales.</span>
                     </div>
                 </button>
             </div>
@@ -208,24 +216,24 @@
         <section id="form-turista-section" class="hidden flex-col gap-lg bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant shadow-sm max-w-md mx-auto my-6">
             <div class="text-center">
                 <h2 class="font-headline-lg text-[22px] text-primary">Registro de Turista Nuevo</h2>
-                <p class="font-body-md text-on-surface-variant text-sm mt-1">Iniciaras con 0 puntos. Ingresa tus datos para guardar tus misiones.</p>
+                <p class="font-body-md text-on-surface-variant text-sm mt-1">Iniciarás con 0 puntos. Ingresa tus datos para generar tu pasaporte personalizado.</p>
             </div>
             <form id="form-perfil-turista" class="flex flex-col gap-md">
                 <div>
-                    <label class="block font-label-lg text-on-surface mb-1">Nombre Completo</label>
-                    <input type="text" id="turista-nombre" placeholder="Tu nombre" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-body-md"/>
+                    <label class="block font-label-lg text-on-surface mb-1">Nombre de Usuario / Nombre Completo</label>
+                    <input type="text" id="turista-nombre" placeholder="Ej: Mateo Garcia" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-body-md"/>
                 </div>
                 <div>
-                    <label class="block font-label-lg text-on-surface mb-1">Origen (Provincia/País)</label>
-                    <input type="text" id="turista-origen" placeholder="Ej: Cordoba, Argentina" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-body-md"/>
+                    <label class="block font-label-lg text-on-surface mb-1">País o Ciudad de Origen</label>
+                    <input type="text" id="turista-origen" placeholder="Ej: Córdoba, Argentina" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-body-md"/>
                 </div>
                 <div>
-                    <label class="block font-label-lg text-on-surface mb-1">Tiempo de Estadía</label>
+                    <label class="block font-label-lg text-on-surface mb-1">Tiempo de Estadía en San Salvador</label>
                     <select id="turista-tiempo" class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-body-md">
-                        <option value="express">Pocas horas - Mediodía (Express)</option>
-                        <option value="explorador">Estadía de 1 día (Explorador)</option>
-                        <option value="pleno">Estadía de 2 días (Jujuy a Pleno)</option>
-                        <option value="sinprisa">3 días o más (Sin Prisa)</option>
+                        <option value="express">Pocas horas - Mediodía (Pasaporte Express)</option>
+                        <option value="explorador">Estadía de 1 día (Pasaporte Explorador)</option>
+                        <option value="pleno">Estadía de 2 días (Pasaporte Jujuy a Pleno)</option>
+                        <option value="sinprisa">3 días o más (Pasaporte Jujuy Sin Prisa)</option>
                     </select>
                 </div>
                 <div>
@@ -233,8 +241,9 @@
                     <select id="turista-modalidad" class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-body-md">
                         <option value="solo">Solo/a</option>
                         <option value="pareja">Pareja</option>
-                        <option value="familia">Familia</option>
-                        <option value="amigos">Amigos</option>
+                        <option value="familia">Familia (Bono +15 pts)</option>
+                        <option value="amigos">Amigos (Bono +15 pts)</option>
+                        <option value="grupo">Grupo Organizado (Bono +15 pts)</option>
                     </select>
                 </div>
                 <button type="submit" class="w-full py-3 bg-secondary text-on-secondary font-headline-md rounded-2xl shadow-md hover:bg-secondary-container transition-colors">
@@ -247,16 +256,16 @@
         <section id="form-residente-section" class="hidden flex-col gap-lg bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant shadow-sm max-w-md mx-auto my-6">
             <div class="text-center">
                 <h2 class="font-headline-lg text-[22px] text-tertiary-fixed-dim">Registro de Residente Nuevo</h2>
-                <p class="font-body-md text-on-surface-variant text-sm mt-1">Iniciaras con 0 puntos. Registrate para recomendar lugares a turistas.</p>
+                <p class="font-body-md text-on-surface-variant text-sm mt-1">Iniciarás con 0 puntos. Regístrate para ser embajador de tu ciudad.</p>
             </div>
             <form id="form-perfil-residente" class="flex flex-col gap-md">
                 <div>
-                    <label class="block font-label-lg text-on-surface mb-1">Nombre Completo</label>
-                    <input type="text" id="residente-nombre" placeholder="Tu nombre" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-body-md"/>
+                    <label class="block font-label-lg text-on-surface mb-1">Nombre Completo / Usuario</label>
+                    <input type="text" id="residente-nombre" placeholder="Ej: Carlos R." required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-body-md"/>
                 </div>
                 <div>
                     <label class="block font-label-lg text-on-surface mb-1">Barrio de Residencia</label>
-                    <input type="text" id="residente-barrio" placeholder="Ej: Barrio Centro" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-body-md"/>
+                    <input type="text" id="residente-barrio" placeholder="Ej: Barrio Los Perales" required class="w-full p-3 rounded-xl bg-surface border border-outline-variant focus:outline-none focus:border-primary text-body-md"/>
                 </div>
                 <button type="submit" class="w-full py-3 bg-tertiary text-on-tertiary font-headline-md rounded-2xl shadow-md hover:bg-tertiary-container transition-colors">
                     Registrarse y Comenzar
@@ -268,7 +277,7 @@
         <section id="view-home" class="tab-content flex flex-col gap-lg">
             <div class="flex flex-col gap-xs pt-md">
                 <h1 class="font-headline-lg-mobile text-on-surface">Hola, <span id="saludo-usuario">Visitante</span></h1>
-                <p class="font-body-md text-on-surface-variant">Listo para explorar Jujuy hoy?</p>
+                <p id="subt-pasaporte" class="font-body-md text-on-surface-variant">Tu pasaporte: Pasaporte Explorador</p>
             </div>
 
             <!-- Digital Passport Card -->
@@ -291,11 +300,24 @@
                             <span class="font-label-sm text-on-primary">Activo</span>
                         </div>
                     </div>
-                    <div class="flex flex-col gap-sm mt-sm">
-                        <span class="font-label-sm text-primary-fixed-dim uppercase tracking-wide">Puntos Acumulados</span>
-                        <div class="flex items-baseline gap-xs">
-                            <span class="font-display-lg text-secondary-fixed text-4xl font-bold" id="animated-points">0</span>
-                            <span class="font-label-sm text-on-primary">pts</span>
+                    
+                    <!-- Puntos e Insignias -->
+                    <div class="flex justify-between items-end mt-sm">
+                        <div class="flex flex-col gap-xs">
+                            <span class="font-label-sm text-primary-fixed-dim uppercase tracking-wide">Puntos Acumulados</span>
+                            <div class="flex items-baseline gap-xs">
+                                <span class="font-display-lg text-secondary-fixed text-4xl font-bold" id="animated-points">0</span>
+                                <span class="font-label-sm text-on-primary">pts</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Contenedor de Insignias ganadas -->
+                        <div class="flex flex-col items-end gap-1">
+                            <span class="font-label-sm text-primary-fixed-dim uppercase tracking-wide">Insignias</span>
+                            <div id="insignias-contenedor" class="flex gap-1">
+                                <!-- Se renderizan dinámicamente -->
+                                <span class="text-xs bg-primary-container text-on-primary px-2 py-0.5 rounded-md border border-outline-variant">Ninguna</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -308,17 +330,17 @@
                 </div>
                 <div class="flex flex-col flex-1">
                     <span class="font-label-lg text-on-tertiary-container">Modo Grupal Activo</span>
-                    <span class="font-body-md text-on-tertiary-container/80 font-bold">Recibes un bono adicional de 15 puntos por cada mision completada en grupo.</span>
+                    <span class="font-body-md text-on-tertiary-container/80 font-bold">¡Recibes un bono adicional de 15 puntos por cada misión completada!</span>
                 </div>
             </div>
 
-            <!-- Enter Recommendation Code (For Tourists to credit local resident) -->
+            <!-- Enter Recommendation Code (Cross-points) -->
             <div id="tourist-recommendation-box" class="bg-surface-container rounded-2xl p-md shadow-sm border border-outline-variant flex flex-col gap-sm">
-                <span class="font-label-lg text-on-surface block font-bold">¿Te recomendo un residente local?</span>
-                <p class="text-xs text-on-surface-variant">Ingresa su nombre de usuario para que ambos sumen 50 puntos extra al validar tu proxima mision.</p>
+                <span class="font-label-lg text-on-surface block font-bold">¿Te recomendó un residente local?</span>
+                <p class="text-xs text-on-surface-variant">Ingresa su nombre de usuario (ej: Carlos R.) para que ambos sumen 50 puntos extra al validar tu próxima misión.</p>
                 <div class="flex gap-sm">
-                    <input type="text" id="input-code-recommend" placeholder="Nombre del residente" class="flex-1 p-2 rounded-xl bg-surface border border-outline-variant focus:outline-none text-sm"/>
-                    <button id="btn-apply-recommend" class="px-4 py-2 bg-primary text-on-primary text-xs font-bold rounded-xl shadow-sm hover:bg-primary-container">Aplicar</button>
+                    <input type="text" id="input-code-recommend" placeholder="Nombre de usuario del residente" class="flex-1 p-2.5 rounded-xl bg-surface border border-outline-variant focus:outline-none text-sm"/>
+                    <button id="btn-apply-recommend" class="px-4 py-2.5 bg-primary text-on-primary text-xs font-bold rounded-xl shadow-sm hover:bg-primary-container">Aplicar</button>
                 </div>
                 <span id="recommend-status-msg" class="text-xs text-secondary font-bold hidden"></span>
             </div>
@@ -345,12 +367,57 @@
                             <span class="font-label-sm text-secondary font-bold" id="pts-faltantes">1500 pts para canjear</span>
                         </div>
                         <div class="flex flex-col gap-xs">
-                            <span id="recompensa-sig-lbl" class="font-label-sm text-on-surface-variant">Proxima Recompensa: Cafe de Cortesia</span>
+                            <span id="recompensa-sig-lbl" class="font-label-sm text-on-surface-variant">Próxima Recompensa: Café de Cortesía (200 pts)</span>
                             <div class="w-full h-2 rounded-full bg-surface-variant overflow-hidden">
                                 <div id="barra-progreso" class="h-full bg-secondary rounded-full w-[0%]"></div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Canje de Recompensas -->
+            <div class="flex flex-col gap-md">
+                <h2 class="font-headline-md text-on-surface">Beneficios y Tienda de Recompensas</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+                    <!-- Reward 1 -->
+                    <div class="bg-surface-container-lowest p-md rounded-2xl border border-outline-variant shadow-sm flex flex-col justify-between gap-sm">
+                        <div>
+                            <span class="text-xs bg-secondary/10 text-secondary font-bold px-2 py-0.5 rounded-full">Cafeterías</span>
+                            <h4 class="font-bold text-on-surface text-sm mt-1">Café de Cortesía gratis</h4>
+                            <p class="text-xs text-on-surface-variant mt-1">Válido en confiterías céntricas adheridas.</p>
+                        </div>
+                        <button class="btn-canjear w-full py-2 bg-primary text-on-primary text-xs font-bold rounded-xl" data-costo="200" data-premio="Café de Cortesía">
+                            Canjear (200 pts)
+                        </button>
+                    </div>
+                    <!-- Reward 2 -->
+                    <div class="bg-surface-container-lowest p-md rounded-2xl border border-outline-variant shadow-sm flex flex-col justify-between gap-sm">
+                        <div>
+                            <span class="text-xs bg-tertiary-fixed-dim/20 text-tertiary-container font-bold px-2 py-0.5 rounded-full">Cultura</span>
+                            <h4 class="font-bold text-on-surface text-sm mt-1">Pase 2x1 en Museos</h4>
+                            <p class="text-xs text-on-surface-variant mt-1">Accede a dos museos provinciales al precio de uno.</p>
+                        </div>
+                        <button class="btn-canjear w-full py-2 bg-primary text-on-primary text-xs font-bold rounded-xl" data-costo="500" data-premio="2x1 Museos">
+                            Canjear (500 pts)
+                        </button>
+                    </div>
+                    <!-- Reward 3 -->
+                    <div class="bg-surface-container-lowest p-md rounded-2xl border border-outline-variant shadow-sm flex flex-col justify-between gap-sm">
+                        <div>
+                            <span class="text-xs bg-secondary/10 text-secondary font-bold px-2 py-0.5 rounded-full">Artesanos</span>
+                            <h4 class="font-bold text-on-surface text-sm mt-1">20% OFF en Souvenirs</h4>
+                            <p class="text-xs text-on-surface-variant mt-1">Descuento en ferias artesanales de la capital.</p>
+                        </div>
+                        <button class="btn-canjear w-full py-2 bg-primary text-on-primary text-xs font-bold rounded-xl" data-costo="800" data-premio="20% OFF Souvenirs">
+                            Canjear (800 pts)
+                        </button>
+                    </div>
+                </div>
+                <!-- Cupones Canjeados -->
+                <div id="cupones-box" class="hidden flex flex-col gap-sm bg-surface-container p-md rounded-2xl border border-outline-variant">
+                    <span class="font-label-lg font-bold text-on-surface">Tus Cupones Canjeados</span>
+                    <ul id="cupones-lista" class="list-disc pl-4 text-xs text-primary flex flex-col gap-1"></ul>
                 </div>
             </div>
 
@@ -380,18 +447,67 @@
 
             <!-- List View -->
             <div id="misiones-list-container" class="flex flex-col gap-md">
+                <!-- Estacional Pachamama -->
+                <div class="mision-card estacional estacional-pachamama flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-secondary to-tertiary"></div>
+                    <div class="flex flex-col flex-1 p-md gap-xs">
+                        <div class="flex justify-between items-start">
+                            <span class="text-xs bg-secondary-container text-on-secondary-container font-bold px-2 py-0.5 rounded-full">Pachamama (Agosto)</span>
+                            <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+100 pts</span>
+                        </div>
+                        <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-xs">Ofrenda en el Mercado 6 de Agosto</h3>
+                        <p class="text-label-sm text-on-surface-variant">Visita el Mercado Municipal y participa de las actividades de ofrenda y sahumado tradicional.</p>
+                        <button class="btn-mision-activar mt-2 px-4 py-2 bg-secondary text-on-secondary rounded-xl text-label-sm font-bold self-start" data-id="pachamama-ofrenda" data-puntos="100">
+                            Iniciar Misión Especial
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Estacional Primavera -->
+                <div class="mision-card estacional estacional-estudiantes hidden flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-tertiary-fixed-dim to-secondary"></div>
+                    <div class="flex flex-col flex-1 p-md gap-xs">
+                        <div class="flex justify-between items-start">
+                            <span class="text-xs bg-primary-container text-on-primary-container font-bold px-2 py-0.5 rounded-full">Primavera (Septiembre)</span>
+                            <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+100 pts</span>
+                        </div>
+                        <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-xs">Desfile de Carrozas en Ciudad Cultural</h3>
+                        <p class="text-label-sm text-on-surface-variant">Completa el circuito de exposición de carrozas estudiantiles y responde las preguntas de los talleres ecológicos.</p>
+                        <button class="btn-mision-activar mt-2 px-4 py-2 bg-secondary text-on-secondary rounded-xl text-label-sm font-bold self-start" data-id="carrozas-primavera" data-puntos="100">
+                            Iniciar Misión Especial
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Estacional Carnaval -->
+                <div class="mision-card estacional estacional-carnaval hidden flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-error to-secondary"></div>
+                    <div class="flex flex-col flex-1 p-md gap-xs">
+                        <div class="flex justify-between items-start">
+                            <span class="text-xs bg-error-container text-on-error-container font-bold px-2 py-0.5 rounded-full">Carnaval (Febrero)</span>
+                            <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+100 pts</span>
+                        </div>
+                        <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-xs">Circuito de Comparsa y Desentierro del Diablo</h3>
+                        <p class="text-label-sm text-on-surface-variant">Registra tu visita a un evento tradicional de carnaval oficial en la capital y responde sobre su historia gastronómica.</p>
+                        <button class="btn-mision-activar mt-2 px-4 py-2 bg-secondary text-on-secondary rounded-xl text-label-sm font-bold self-start" data-id="carnaval-desentierro" data-puntos="100">
+                            Iniciar Misión Especial
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Misiones Básicas -->
                 <!-- Mision 1 -->
                 <div class="flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant">
                     <div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary"></div>
                     <div class="flex flex-col flex-1 p-md gap-xs">
                         <div class="flex justify-between items-start">
-                            <span class="text-label-sm font-label-sm text-secondary bg-secondary/10 px-2 py-0.5 rounded-full">Historico</span>
+                            <span class="text-label-sm font-label-sm text-secondary bg-secondary/10 px-2 py-0.5 rounded-full">Histórico</span>
                             <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+50 pts</span>
                         </div>
                         <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-xs">Cabildo de Jujuy</h3>
-                        <p class="text-label-sm text-on-surface-variant">Visita el casco centrico e ingresa tus respuestas patrimoniales.</p>
+                        <p class="text-label-sm text-on-surface-variant">Visita el casco céntrico e ingresa tus respuestas patrimoniales.</p>
                         <button class="btn-mision-activar mt-2 px-4 py-2 bg-secondary text-on-secondary rounded-xl text-label-sm font-bold self-start" data-id="cabildo" data-puntos="50">
-                            Iniciar Mision
+                            Iniciar Misión
                         </button>
                     </div>
                 </div>
@@ -404,15 +520,31 @@
                             <span class="text-label-sm font-label-sm text-tertiary-container bg-tertiary-fixed/30 px-2 py-0.5 rounded-full">Naturaleza</span>
                             <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+120 pts</span>
                         </div>
-                        <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-xs">Parque Botanico Municipal</h3>
-                        <p class="text-label-sm text-on-surface-variant">Completa el recorrido de senderos y avistamiento ecologico.</p>
+                        <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-xs">Parque Botánico Municipal</h3>
+                        <p class="text-label-sm text-on-surface-variant">Completa el recorrido de senderos y avistamiento ecológico.</p>
                         <button class="btn-mision-activar mt-2 px-4 py-2 bg-secondary text-on-secondary rounded-xl text-label-sm font-bold self-start" data-id="botanico" data-puntos="120">
-                            Iniciar Mision
+                            Iniciar Misión
                         </button>
                     </div>
                 </div>
 
-                <!-- Mision 3 -->
+                <!-- Mision 3 (Sabores) -->
+                <div class="flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-container"></div>
+                    <div class="flex flex-col flex-1 p-md gap-xs">
+                        <div class="flex justify-between items-start">
+                            <span class="text-label-sm font-label-sm text-on-primary-container bg-primary-fixed w-fit px-2 py-0.5 rounded-full">Sabores</span>
+                            <span class="font-label-lg font-bold text-primary flex items-center gap-xs">+70 pts</span>
+                        </div>
+                        <h3 class="text-body-lg font-bold text-on-surface leading-tight mt-xs">Paseo Pachamama y Corredor Gastronómico</h3>
+                        <p class="text-label-sm text-on-surface-variant">Visita el Paseo y cata una empanada o humita tradicional.</p>
+                        <button class="btn-mision-activar mt-2 px-4 py-2 bg-secondary text-on-secondary rounded-xl text-label-sm font-bold self-start" data-id="corredor-sabores" data-puntos="70">
+                            Iniciar Misión
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mision 4 (Bloqueada) -->
                 <div class="flex bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden relative border border-outline-variant opacity-75">
                     <div class="absolute left-0 top-0 bottom-0 w-1 bg-outline-variant"></div>
                     <div class="flex flex-col flex-1 p-md gap-xs">
@@ -421,7 +553,7 @@
                             <span class="font-label-lg font-bold text-outline flex items-center gap-xs">+80 pts</span>
                         </div>
                         <h3 class="text-body-lg font-bold text-on-surface-variant leading-tight mt-xs">Museo Juan Galo Lavalle</h3>
-                        <p class="text-label-sm text-on-surface-variant">Requiere nivel 5 para desbloquear esta mision.</p>
+                        <p class="text-label-sm text-on-surface-variant font-bold">Bloqueado. Requiere nivel 5.</p>
                     </div>
                 </div>
             </div>
@@ -443,7 +575,7 @@
                         <span class="material-symbols-outlined text-[16px]">eco</span>
                         Comunidad Activa
                     </div>
-                    <h2 class="font-display-lg text-[24px] leading-[30px] font-bold text-on-surface mt-xs">Tu eres el corazon de Jujuy</h2>
+                    <h2 class="font-display-lg text-[24px] leading-[30px] font-bold text-on-surface mt-xs">Tú eres el corazón de Jujuy</h2>
                     <p class="font-body-md text-on-surface-variant text-sm mt-1">Suma puntos cuidando tu barrio y recomendando lugares.</p>
                 </div>
             </div>
@@ -462,16 +594,16 @@
                             </div>
                             <div class="flex-1">
                                 <span class="font-label-lg text-on-surface block font-bold">Recomendar un Tesoro Oculto</span>
-                                <span class="font-body-md text-xs text-on-surface-variant">Genera tu recomendacion para que los turistas la ingresen. Ambos sumaran puntos.</span>
+                                <span class="font-body-md text-xs text-on-surface-variant">Genera tu recomendación para que los turistas la ingresen. Ambos sumarán puntos.</span>
                             </div>
                             <span class="font-label-sm text-secondary font-bold shrink-0">+50 pts</span>
                         </div>
                         <div class="flex gap-sm mt-2">
-                            <input type="text" id="residente-lugar-recomendar" placeholder="Lugar (ej: Parque Botanico)" class="flex-1 p-2 rounded-xl bg-surface border border-outline-variant text-xs focus:outline-none"/>
-                            <button id="btn-generar-recomendar" class="px-4 py-2 bg-secondary text-on-secondary rounded-xl text-xs font-bold shadow-sm">Generar</button>
+                            <input type="text" id="residente-lugar-recomendar" placeholder="Lugar (ej: Parque Botánico)" class="flex-1 p-2.5 rounded-xl bg-surface border border-outline-variant text-xs focus:outline-none"/>
+                            <button id="btn-generar-recomendar" class="px-4 py-2.5 bg-secondary text-on-secondary rounded-xl text-xs font-bold shadow-sm">Generar</button>
                         </div>
                         <div id="box-codigo-generado" class="hidden p-3 bg-surface-container rounded-xl text-center border border-dashed border-outline font-mono text-sm text-primary">
-                            Codigo a compartir: <span id="codigo-generado" class="font-bold"></span>
+                            Código a compartir: <span id="codigo-generado" class="font-bold"></span>
                         </div>
                     </div>
 
@@ -495,18 +627,10 @@
                     <div class="flex items-center gap-md p-md border-b border-outline-variant">
                         <div class="font-bold text-primary w-8">1</div>
                         <div class="flex-1">
-                            <span class="font-label-lg text-on-surface block font-bold">Maria L.</span>
-                            <span class="text-xs text-on-surface-variant">4 reportes ecologicos</span>
+                            <span class="font-label-lg text-on-surface block font-bold">María L.</span>
+                            <span class="text-xs text-on-surface-variant">4 reportes ecológicos</span>
                         </div>
                         <span class="font-label-lg text-tertiary-fixed-dim font-bold">3450 pts</span>
-                    </div>
-                    <div class="flex items-center gap-md p-md border-b border-outline-variant">
-                        <div class="font-bold text-on-surface-variant w-8">2</div>
-                        <div class="flex-1">
-                            <span class="font-label-lg text-on-surface block font-bold">Carlos R.</span>
-                            <span class="text-xs text-on-surface-variant">12 consejos turisticos</span>
-                        </div>
-                        <span class="font-label-lg text-on-surface font-bold">2890 pts</span>
                     </div>
                 </div>
             </div>
@@ -519,32 +643,61 @@
                 <p class="font-body-md text-on-surface-variant">Métricas en tiempo real y gestión municipal.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+            <!-- Estadísticas en tarjetas -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-md">
                 <div class="flex flex-col p-md rounded-xl bg-surface-container shadow-sm gap-xs border border-outline-variant">
                     <div class="flex items-center gap-xs text-secondary">
                         <span class="material-symbols-outlined text-[20px]">groups</span>
                         <span class="font-label-sm uppercase tracking-wider text-on-surface-variant">Registrados</span>
                     </div>
-                    <div class="font-display-lg text-primary text-3xl font-bold mt-2" id="admin-total-usuarios">42</div>
-                    <span class="text-xs text-tertiary-container bg-tertiary-fixed w-fit px-2 py-0.5 rounded-full mt-2">+12% hoy</span>
+                    <div class="font-display-lg text-primary text-3xl font-bold mt-2" id="admin-total-usuarios">3</div>
+                    <span class="text-xs text-on-surface-variant mt-2">Usuarios en DB</span>
                 </div>
 
                 <div class="flex flex-col p-md rounded-xl bg-surface-container shadow-sm gap-xs border border-outline-variant">
                     <div class="flex items-center gap-xs text-secondary-container">
-                        <span class="material-symbols-outlined text-[20px]">star</span>
-                        <span class="font-label-sm uppercase tracking-wider text-on-surface-variant">Dia Pico</span>
+                        <span class="material-symbols-outlined text-[20px]">calendar_today</span>
+                        <span class="font-label-sm uppercase tracking-wider text-on-surface-variant">Día Pico</span>
                     </div>
-                    <div class="font-display-lg text-primary text-3xl font-bold mt-2">Sabado</div>
-                    <span class="text-xs text-on-surface-variant mt-2">Mayor flujo turistico</span>
+                    <div class="font-display-lg text-primary text-3xl font-bold mt-2">Sábado</div>
+                    <span class="text-xs text-on-surface-variant mt-2">Tráfico máximo</span>
                 </div>
 
-                <div class="flex flex-col p-md rounded-xl bg-surface-container shadow-sm gap-xs justify-between border border-outline-variant">
-                    <div class="flex items-center gap-xs text-secondary-container">
-                        <span class="material-symbols-outlined text-[20px]">tour</span>
-                        <span class="font-label-sm uppercase tracking-wider text-on-surface-variant">Mision Top</span>
+                <div class="flex flex-col p-md rounded-xl bg-surface-container shadow-sm gap-xs border border-outline-variant">
+                    <div class="flex items-center gap-xs text-tertiary-fixed-dim">
+                        <span class="material-symbols-outlined text-[20px]">schedule</span>
+                        <span class="font-label-sm uppercase tracking-wider text-on-surface-variant">Estadía Prom.</span>
                     </div>
-                    <div class="font-body-lg font-semibold text-primary mt-2">Cabildo de Jujuy</div>
-                    <span class="text-xs text-on-surface-variant">840 validaciones totales</span>
+                    <div class="font-display-lg text-primary text-3xl font-bold mt-2" id="admin-promedio-estadia">1.8 días</div>
+                    <span class="text-xs text-on-surface-variant mt-2">Basado en registros</span>
+                </div>
+
+                <div class="flex flex-col p-md rounded-xl bg-surface-container shadow-sm gap-xs border border-outline-variant">
+                    <div class="flex items-center gap-xs text-primary-container">
+                        <span class="material-symbols-outlined text-[20px]">tour</span>
+                        <span class="font-label-sm uppercase tracking-wider text-on-surface-variant">Ciclo Activo</span>
+                    </div>
+                    <div class="font-display-lg text-primary text-xl font-bold mt-2" id="admin-ciclo-actual">Agosto - Pachamama</div>
+                    <span class="text-xs text-on-surface-variant mt-2">Pasaporte estacional</span>
+                </div>
+            </div>
+
+            <!-- Tabla de afluencia de visitas / Estadísticas -->
+            <div class="bg-surface-container p-md rounded-2xl border border-outline-variant flex flex-col gap-sm">
+                <span class="font-label-lg font-bold text-on-surface">Validaciones en Atractivos (Estadísticas Reales de Visitas)</span>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="border-b border-outline-variant font-bold text-on-surface-variant">
+                                <th class="py-2">Atractivo</th>
+                                <th class="py-2">Visitas / Validaciones</th>
+                                <th class="py-2">Categoría</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-tabla-visitas">
+                            <!-- Carga dinámica -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
