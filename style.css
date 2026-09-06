@@ -40,25 +40,25 @@ body {
   min-height: 100vh;
 }
 
-/* Ilustración de fondo: Siluetas de Cerros Jujeños y Cardones (Identidad Paisajística) */
+/* Ilustración de fondo: Siluetas de Cerros Jujeños, Lapachos Rosados en flor y Cardones */
 .bg-andean-decor {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 380px;
+  height: 400px;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.18;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 380'%3E%3C!-- Cordón montañoso fondo --%3E%3Cpath d='M0 380L140 210L280 310L440 130L620 320L820 90L1040 280L1200 170L1340 310L1440 230V380H0Z' fill='%23b85427'/%3E%3C!-- Cordón montañoso frontal --%3E%3Cpath d='M0 380L220 270L400 340L600 230L800 320L1000 200L1220 330L1440 270V380H0Z' fill='%231e6b66' opacity='0.7'/%3E%3C!-- Cardones estilizados --%3E%3Cg fill='%232d2621'%3E%3Cpath d='M420 180v90h12v-90h-12zm-16 28v35h12v-35h-12zm32 12v38h12v-38h-12zm380-100v100h14v-100h-14zm-20 32v40h14v-40h-14zm40 16v45h14v-45h-14z'/%3E%3Cpath d='M1100 220v80h10v-80h-10zm-14 25v30h10v-30h-10zm28 10v35h10v-35h-10z'/%3E%3C/g%3E%3C/svg%3E") no-repeat bottom center;
+  opacity: 0.32;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 400'%3E%3C!-- Montañas fondo Terracota --%3E%3Cpath d='M0 400L140 220L280 320L440 140L620 330L820 100L1040 290L1200 180L1340 320L1440 240V400H0Z' fill='%23b85427' opacity='0.75'/%3E%3C!-- Montañas medias Yungas --%3E%3Cpath d='M0 400L200 280L380 350L580 240L780 330L980 210L1200 340L1440 280V400H0Z' fill='%231e6b66' opacity='0.85'/%3E%3C!-- Lapacho Rosado en Flor (Árbol y Flor de Jujuy) Izquierda --%3E%3Cpath d='M150 400v-90c0-10 10-25 25-35 5-20-15-45 15-55 30-10 45 15 50 30 15-5 35 10 30 30 20 10 15 35-5 40v80h-115z' fill='%23b44a68' opacity='0.9'/%3E%3Ccircle cx='180' cy='240' r='18' fill='%23d87093'/%3E%3Ccircle cx='210' cy='225' r='22' fill='%23c71585' opacity='0.85'/%3E%3Ccircle cx='240' cy='250' r='16' fill='%23ffb6c1'/%3E%3C!-- Lapacho Rosado Derecha --%3E%3Cpath d='M1250 400v-100c-5-15 15-30 30-40 10-25-10-50 20-60 35-10 50 15 55 35 20-5 40 10 35 35 25 10 15 40-10 45v85h-130z' fill='%23b44a68' opacity='0.9'/%3E%3Ccircle cx='1280' cy='230' r='20' fill='%23d87093'/%3E%3Ccircle cx='1315' cy='210' r='24' fill='%23c71585' opacity='0.85'/%3E%3Ccircle cx='1350' cy='240' r='18' fill='%23ffb6c1'/%3E%3C!-- Cardones estilizados --%3E%3Cg fill='%232d2621' opacity='0.9'%3E%3Cpath d='M440 190v90h12v-90h-12zm-16 28v35h12v-35h-12zm32 12v38h12v-38h-12zm380-100v100h14v-100h-14zm-20 32v40h14v-40h-14zm40 16v45h14v-45h-14z'/%3E%3Cpath d='M920 220v80h10v-80h-10zm-14 25v30h10v-30h-10zm28 10v35h10v-35h-10z'/%3E%3C/g%3E%3C/svg%3E") no-repeat bottom center;
   background-size: cover;
 }
 
 @media (max-width: 640px) {
   .bg-andean-decor {
-    height: 300px;
-    opacity: 0.24;
-    background-size: 1000px 300px;
+    height: 320px;
+    opacity: 0.38;
+    background-size: 1000px 320px;
     background-position: center bottom;
   }
 }
