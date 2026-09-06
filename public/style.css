@@ -1,0 +1,171 @@
+/* Jujuy Ciudad Pass - Identidad San Salvador de Jujuy (Lapacho Rosado, Arquitectura Colonial & Xibi Xibi) */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Fondo mate cálido intermedio (descanso visual - color caliza colonial / arena suave) */
+  --bg-main: #ece6dc;
+  --bg-surface: #faf7f2;
+  --bg-surface-elevated: #f2ebdE;
+  --bg-sand: #ded5c7;
+  
+  /* Símbolos culturales de San Salvador de Jujuy */
+  --lapacho-primary: #b44a68;      /* Flor del Lapacho Rosado (Árbol y Flor Provincial de Jujuy) */
+  --lapacho-dark: #8c324c;
+  --lapacho-light: #f7e8ee;
+  
+  --xibixibi-green: #2a6f68;       /* Parque Xibi Xibi / Yungas urbanas */
+  --xibixibi-dark: #1b4e49;
+  --xibixibi-light: #dcf0ed;
+  
+  --colonial-terracotta: #b85427;  /* Tejas coloniales y Cabildo histórico */
+  --libertad-gold: #c68a35;        /* Sol de la Bandera de la Libertad Civil */
+  
+  /* Tipografía neutra, sobria y descansada */
+  --text-primary: #2d2621;
+  --text-secondary: #5c534b;
+  --text-muted: #857b71;
+  --border-subtle: #d3c8b9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-main) !important;
+  color: var(--text-primary);
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Ilustración de fondo: Siluetas de Cerros Jujeños y Cardones (Identidad Paisajística) */
+.bg-andean-decor {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 380px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.18;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 380'%3E%3C!-- Cordón montañoso fondo --%3E%3Cpath d='M0 380L140 210L280 310L440 130L620 320L820 90L1040 280L1200 170L1340 310L1440 230V380H0Z' fill='%23b85427'/%3E%3C!-- Cordón montañoso frontal --%3E%3Cpath d='M0 380L220 270L400 340L600 230L800 320L1000 200L1220 330L1440 270V380H0Z' fill='%231e6b66' opacity='0.7'/%3E%3C!-- Cardones estilizados --%3E%3Cg fill='%232d2621'%3E%3Cpath d='M420 180v90h12v-90h-12zm-16 28v35h12v-35h-12zm32 12v38h12v-38h-12zm380-100v100h14v-100h-14zm-20 32v40h14v-40h-14zm40 16v45h14v-45h-14z'/%3E%3Cpath d='M1100 220v80h10v-80h-10zm-14 25v30h10v-30h-10zm28 10v35h10v-35h-10z'/%3E%3C/g%3E%3C/svg%3E") no-repeat bottom center;
+  background-size: cover;
+}
+
+@media (max-width: 640px) {
+  .bg-andean-decor {
+    height: 300px;
+    opacity: 0.24;
+    background-size: 1000px 300px;
+    background-position: center bottom;
+  }
+}
+
+/* Glass & Card Styles */
+.light-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 4px 16px -2px rgba(64, 45, 33, 0.07);
+  border-radius: 1.25rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  z-index: 1;
+}
+
+.light-card:hover {
+  border-color: #beb1a1;
+  box-shadow: 0 8px 22px -2px rgba(64, 45, 33, 0.11);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Navigation Tabs */
+.nav-tab-btn {
+  background-color: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.nav-tab-btn:hover {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+}
+
+.nav-tab-btn.active-tab {
+  background-color: var(--terracotta-primary) !important;
+  color: #ffffff !important;
+  border-color: var(--terracotta-primary) !important;
+  box-shadow: 0 4px 14px rgba(184, 84, 39, 0.3) !important;
+}
+
+/* Mobile Bottom Navigation */
+.mobile-nav-item {
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.mobile-nav-item.active-tab {
+  color: var(--terracotta-primary) !important;
+  font-weight: 700;
+}
+
+.mobile-nav-item.active-tab i {
+  transform: scale(1.15);
+  color: var(--terracotta-primary);
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, #1e6b66 0%, #154e4a 100%);
+  color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #154e4a 0%, #0d3835 100%);
+  box-shadow: 0 6px 16px rgba(30, 107, 102, 0.35);
+}
+
+.btn-terracotta {
+  background: linear-gradient(135deg, #b85427 0%, #8f3c16 100%);
+  color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.btn-terracotta:hover {
+  background: linear-gradient(135deg, #c76031 0%, #b85427 100%);
+  box-shadow: 0 6px 16px rgba(184, 84, 39, 0.35);
+}
+
+.btn-rose {
+  background: linear-gradient(135deg, #b85427 0%, #8f3c16 100%);
+  color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.btn-rose:hover {
+  background: linear-gradient(135deg, #c76031 0%, #b85427 100%);
+  box-shadow: 0 6px 16px rgba(184, 84, 39, 0.35);
+}
+
+/* Logo container con integración suave */
+.logo-container {
+  background: #ffffff;
+  padding: 6px;
+  border-radius: 1.25rem;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 3px 10px rgba(64, 45, 33, 0.06);
+  display: inline-block;
+}
