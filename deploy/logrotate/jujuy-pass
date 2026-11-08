@@ -1,0 +1,14 @@
+# Jujuy Ciudad Pass — rotación de logs (install.sh lo copia a /etc/logrotate.d/jujuy-pass)
+# Los logs de nginx (/var/log/nginx/*.log) los rota la configuración propia de nginx.
+/var/log/jujuy-pass/*.log {
+    su root root
+    daily
+    rotate 14
+    maxsize 20M
+    missingok
+    notifempty
+    compress
+    delaycompress
+    # El servicio mantiene el archivo abierto: se copia y se vacía, sin reiniciar nada.
+    copytruncate
+}

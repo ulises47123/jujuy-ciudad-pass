@@ -1,0 +1,69 @@
+# =============================================================================
+#  Jujuy Ciudad Pass — API (FastAPI + uvicorn) como servicio systemd
+#  install.sh lo copia a /etc/systemd/system/jujuy-pass.service
+#
+#  Comandos útiles:
+#    sudo systemctl status jujuy-pass
+#    sudo systemctl restart jujuy-pass
+#    sudo tail -f /var/log/jujuy-pass/app.log
+# =============================================================================
+[Unit]
+Description=Jujuy Ciudad Pass - API (FastAPI/uvicorn)
+Documentation=file:///opt/jujuy-pass/actual/docs/DESPLIEGUE.md
+After=network-online.target
+Wants=network-online.target
+# Si se cae más de 10 veces en 2 minutos, systemd deja de reintentar (evita un bucle).
+StartLimitIntervalSec=120
+StartLimitBurst=10
+
+[Service]
+Type=simple
+User=jujuypass
+Group=jujuypass
+EnvironmentFile=/etc/jujuy-pass/jujuy-pass.env
+Environment=PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 HOME=/var/lib/jujuy-pass
+# "actual" es un enlace a la release activa (lo cambia jujuy-pass-update).
+WorkingDirectory=/opt/jujuy-pass/actual/backend
+ExecStart=/opt/jujuy-pass/actual/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 1 --proxy-headers --forwarded-allow-ips 127.0.0.1
+Restart=always
+RestartSec=3
+TimeoutStopSec=20
+UMask=0027
+
+# Logs de la aplicación (rotados por /etc/logrotate.d/jujuy-pass)
+StandardOutput=append:/var/log/jujuy-pass/app.log
+StandardError=append:/var/log/jujuy-pass/app.log
+
+# --- Recursos (servidor de 1 GB) ---
+MemoryHigh=250M
+MemoryMax=300M
+TasksMax=64
+LimitNOFILE=4096
+
+# --- Endurecimiento ---
+NoNewPrivileges=yes
+ProtectSystem=strict
+ReadWritePaths=/var/lib/jujuy-pass /var/log/jujuy-pass
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged
+SystemCallErrorNumber=EPERM
+
+[Install]
+WantedBy=multi-user.target

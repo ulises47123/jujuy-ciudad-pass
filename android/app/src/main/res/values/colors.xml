@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="crema">#FBF9F5</color>
+    <color name="arena">#F4EDE4</color>
+    <color name="terracota">#C25E2E</color>
+    <color name="terracota_oscuro">#9C431B</color>
+    <color name="terracota_claro">#FBEEE7</color>
+    <color name="turquesa">#0F766E</color>
+    <color name="turquesa_claro">#E6F6F4</color>
+    <color name="texto">#292524</color>
+    <color name="borde">#E7DED5</color>
+</resources>

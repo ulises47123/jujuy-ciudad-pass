@@ -1,0 +1,15 @@
+# /etc/conf.d/jujuy-pass — opciones del servicio jujuy-pass (Alpine/OpenRC)
+# install.sh lo crea solo si no existe (tus cambios se conservan).
+
+# Archivo con las variables de la aplicación
+#JCP_ENV_FILE="/etc/jujuy-pass/jujuy-pass.env"
+
+# Límite de memoria (equivalente a MemoryHigh/MemoryMax de systemd).
+# Solo tiene efecto con cgroups v2: en /etc/rc.conf poné  rc_cgroup_mode="unified"
+# y verificá que esté habilitado el servicio cgroups:  rc-update add cgroups sysinit
+rc_cgroup_settings="
+memory.high 250M
+memory.max 300M
+"
+# Al detener el servicio, matar también cualquier proceso hijo que haya quedado.
+rc_cgroup_cleanup="yes"
