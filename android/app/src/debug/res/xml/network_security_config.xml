@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SOLO DEBUG: permite http sin cifrar para probar contra la PC en la red local (http://IP:8000/api/v1/). -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>

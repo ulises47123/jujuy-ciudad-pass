@@ -1,0 +1,3 @@
+# Los scripts y configuraciones de deploy/ se ejecutan en Linux: siempre con fin de línea LF,
+# aunque el repositorio se clone en Windows.
+* text=auto eol=lf

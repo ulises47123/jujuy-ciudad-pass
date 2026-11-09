@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Jujuy Pass</string>
+
+    <!-- Generales -->
+    <string name="reintentar">Reintentar</string>
+    <string name="recargar">Recargar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="cerrar">Cerrar</string>
+    <string name="continuar">Continuar</string>
+    <string name="guardar">Guardar</string>
+    <string name="volver">Volver</string>
+    <string name="salir">Salir</string>
+    <string name="activar">Activar</string>
+    <string name="mostrar">Mostrar</string>
+    <string name="ocultar">Ocultar</string>
+
+    <!-- Errores -->
+    <string name="error_sin_conexion">No pudimos conectarnos con el servidor. Revisá tu conexión a internet y probá de nuevo.</string>
+    <string name="error_tiempo">El servidor tardó demasiado en responder. Probá de nuevo en un ratito.</string>
+    <string name="error_inesperado">Algo salió mal. Probá de nuevo.</string>
+    <string name="error_http">Error del servidor (código %1$d). Probá de nuevo.</string>
+    <string name="error_fuera_de_rango">Estás a %1$s del lugar.</string>
+    <string name="error_fuera_de_rango_radio">Estás a %1$s del lugar; tenés que estar a menos de %2$s.</string>
+    <string name="error_precision">La precisión de tu GPS fue de %1$s. Probá al aire libre, lejos de techos y edificios altos.</string>
+    <string name="error_puntos_insuficientes">Tenés %1$d puntos y necesitás %2$d.</string>
+    <string name="error_sin_senal">No pudimos obtener una buena señal GPS. Probá al aire libre y volvé a intentar.</string>
+
+    <!-- Bienvenida / login / registro -->
+    <string name="bienvenida_lema">Descubrí San Salvador de Jujuy y ganá premios</string>
+    <string name="bienvenida_paso1">Visitá los lugares de la ciudad.</string>
+    <string name="bienvenida_paso2">Tocá “Estoy aquí” y respondé la trivia en el lugar.</string>
+    <string name="bienvenida_paso3">Sumá puntos y canjealos por beneficios en negocios adheridos.</string>
+    <string name="ingresar">Ingresar</string>
+    <string name="crear_cuenta">Crear cuenta</string>
+    <string name="login_titulo">¡Hola de nuevo!</string>
+    <string name="login_subtitulo">Ingresá con tu cuenta de turista</string>
+    <string name="login_ir_registro">¿No tenés cuenta? Creá una</string>
+    <string name="registro_titulo">Creá tu cuenta</string>
+    <string name="registro_subtitulo">Es gratis y te lleva un minuto</string>
+    <string name="registro_ir_login">¿Ya tenés cuenta? Ingresá</string>
+    <string name="campo_email">Email</string>
+    <string name="campo_nombre">Nombre</string>
+    <string name="campo_password">Contraseña</string>
+    <string name="campo_password_actual">Contraseña actual</string>
+    <string name="campo_password_nueva">Contraseña nueva (mínimo 8 caracteres)</string>
+    <string name="campo_password_repetir">Repetí la contraseña</string>
+    <string name="campo_procedencia">¿De dónde venís? (opcional)</string>
+    <string name="validacion_email">Ingresá un email válido.</string>
+    <string name="validacion_nombre">Ingresá tu nombre.</string>
+    <string name="validacion_password_vacia">Ingresá tu contraseña.</string>
+    <string name="validacion_password_corta">La contraseña tiene que tener al menos 8 caracteres.</string>
+    <string name="validacion_password_distinta">Las contraseñas no coinciden.</string>
+    <string name="sesion_expirada">Tu sesión expiró. Ingresá de nuevo.</string>
+
+    <!-- Servidor (solo debug) -->
+    <string name="servidor_titulo">Servidor (debug)</string>
+    <string name="servidor_ayuda">URL de la API terminada en /api/v1/. Para probar contra la PC: http://IP-DE-LA-PC:8000/api/v1/\nPor defecto: %1$s</string>
+    <string name="servidor_url">URL de la API</string>
+    <string name="servidor_probar">Probar conexión</string>
+    <string name="servidor_probando">Probando…</string>
+    <string name="servidor_ok">Conectado (versión %1$s)</string>
+    <string name="servidor_restablecer">Restablecer la URL por defecto</string>
+
+    <!-- Pestañas -->
+    <string name="tab_misiones">Misiones</string>
+    <string name="tab_mapa">Mapa</string>
+    <string name="tab_beneficios">Beneficios</string>
+    <string name="tab_cupones">Mis cupones</string>
+    <string name="tab_perfil">Perfil</string>
+
+    <!-- Misiones / mapa -->
+    <string name="hola_nombre">¡Hola, %1$s!</string>
+    <string name="puntos_y_rango">%1$d puntos · %2$s</string>
+    <string name="misiones_progreso">Visitaste %1$d de %2$d lugares</string>
+    <string name="misiones_vacio">Todavía no hay lugares para visitar</string>
+    <string name="misiones_vacio_detalle">Deslizá hacia abajo para actualizar más tarde.</string>
+    <string name="aviso_permiso_distancias">Activá la ubicación para ver a qué distancia estás de cada lugar.</string>
+    <string name="visitado">Visitado</string>
+    <string name="estas_aca">¡Estás acá!</string>
+    <string name="a_distancia">a %1$s</string>
+    <string name="puntos_abrev">%1$d pts</string>
+    <string name="cargando_lugares">Cargando lugares…</string>
+    <string name="mi_ubicacion">Mi ubicación</string>
+    <string name="ver_detalle">Ver detalle</string>
+    <string name="osm_atribucion">© colaboradores de OpenStreetMap</string>
+
+    <!-- Detalle del lugar y visita -->
+    <string name="lugar">Lugar</string>
+    <string name="distancia_desconocida">Activá la ubicación para ver a qué distancia estás.</string>
+    <string name="dentro_del_radio">¡Estás dentro del área del lugar!</string>
+    <string name="estas_a">Estás a %1$s</string>
+    <string name="radio_lugar">Tenés que estar a menos de %1$s del punto.</string>
+    <string name="como_llegar">Cómo llegar</string>
+    <string name="como_funciona">Cuando estés en el lugar, tocá “Estoy aquí”. Vamos a verificar tu ubicación unos segundos y, si estás ahí, te mostramos una pregunta. Respondela sin irte del lugar.</string>
+    <string name="estoy_aqui">Estoy aquí</string>
+    <string name="ya_visitaste">Ya visitaste este lugar y sumaste sus puntos.</string>
+    <string name="buscando_gps">Buscando señal GPS…</string>
+    <string name="tomando_muestras">Verificando tu ubicación… (%1$d de %2$d)</string>
+    <string name="quedate_quieto">Quedate en el lugar unos segundos, preferentemente al aire libre.</string>
+    <string name="validando_ubicacion">Validando tu ubicación con el servidor…</string>
+    <string name="trivia_titulo">PREGUNTA</string>
+    <string name="te_quedan">Te quedan %1$s</string>
+    <string name="verificando_respuesta">Verificando tu ubicación y tu respuesta…</string>
+    <string name="toca_para_reintentar">Tocá una opción para reintentar.</string>
+    <string name="tiempo_agotado">Se terminó el tiempo para responder. Cuenta como un intento fallido.</string>
+    <string name="intentar_de_nuevo">Intentar de nuevo</string>
+    <string name="correcto">¡Correcto!</string>
+    <string name="ganaste_puntos">Ganaste %1$d puntos</string>
+    <string name="bonus_temporada">¡Bonus de temporada %1$s!</string>
+    <string name="incorrecto">Respuesta incorrecta</string>
+    <string name="incorrecto_detalle">Esta vez no fue. Podés volver a intentarlo.</string>
+    <string name="sin_intentos">No te quedan intentos por hoy en este lugar. Volvé mañana.</string>
+    <string name="salir_mision_titulo">¿Salir de la misión?</string>
+    <string name="salir_mision">El tiempo para responder sigue corriendo: si volvés antes de que venza, vas a ver la misma pregunta. Si vence sin respuesta, cuenta como un intento fallido.</string>
+    <string name="quedarme">Quedarme</string>
+
+    <!-- Permisos y GPS -->
+    <string name="permiso_titulo">Necesitamos tu ubicación</string>
+    <string name="permiso_explicacion">Para validar que estás en el lugar usamos tu ubicación precisa durante unos segundos, solo cuando tocás “Estoy aquí” o mirás las distancias. No la compartimos con nadie más.\n\nEn el siguiente paso elegí “Precisa” y “Mientras se usa la app”.</string>
+    <string name="permiso_denegado_titulo">Sin permiso de ubicación</string>
+    <string name="permiso_denegado">Sin acceso a tu ubicación no podemos validar que estás en el lugar.</string>
+    <string name="permiso_denegado_siempre">El permiso de ubicación está bloqueado. Abrí los ajustes de la app, entrá en Permisos → Ubicación y elegí “Permitir mientras se usa la app” con ubicación precisa.</string>
+    <string name="permiso_precisa_titulo">Necesitamos la ubicación precisa</string>
+    <string name="permiso_precisa">Con la ubicación aproximada no podemos saber si estás en el lugar. Volvé a intentar y activá “Ubicación precisa”.</string>
+    <string name="abrir_ajustes">Abrir ajustes</string>
+    <string name="gps_apagado_titulo">La ubicación está apagada</string>
+    <string name="gps_apagado">Activá la ubicación (GPS) del teléfono para poder verificar que estás en el lugar.</string>
+    <string name="activar_ubicacion">Activar ubicación</string>
+
+    <!-- Beneficios -->
+    <string name="tu_saldo">Tenés %1$d puntos para canjear</string>
+    <string name="beneficios_vacio">Todavía no hay beneficios disponibles</string>
+    <string name="beneficios_vacio_detalle">Pronto se van a sumar negocios. Mientras, seguí sumando puntos.</string>
+    <string name="canjear">Canjear</string>
+    <string name="canjear_titulo">Confirmar canje</string>
+    <string name="canjear_confirmar">¿Querés canjear “%1$s” por %2$d puntos?</string>
+    <string name="en_negocio">En %1$s</string>
+    <string name="sin_stock">Sin stock</string>
+    <string name="te_faltan">Te faltan %1$d puntos</string>
+    <string name="canje_listo">¡Listo! Ya tenés tu cupón</string>
+    <string name="canje_listo_detalle">Mostrá este código o el QR en el negocio. Lo encontrás siempre en “Mis cupones”.</string>
+    <string name="tu_cupon">Tu cupón</string>
+    <string name="ver_mis_cupones">Ver mis cupones</string>
+
+    <!-- Cupones -->
+    <string name="cupones_vacio">Todavía no canjeaste ningún beneficio</string>
+    <string name="cupones_vacio_detalle">Cuando canjees puntos, tus cupones van a aparecer acá.</string>
+    <string name="ver_beneficios">Ver beneficios</string>
+    <string name="ver_qr">Ver QR</string>
+    <string name="estado_disponible">Disponible</string>
+    <string name="estado_usado">Usado</string>
+    <string name="estado_vencido">Vencido</string>
+    <string name="estado_anulado">Anulado</string>
+    <string name="vence_el">Vence el %1$s</string>
+    <string name="vencio_el">Venció el %1$s</string>
+    <string name="usado_el">Usado el %1$s</string>
+    <string name="cupon_instrucciones">Mostrale este código al negocio. Es personal y se puede usar una sola vez.</string>
+    <string name="cupon_no_disponible">Este cupón ya no se puede usar.</string>
+    <string name="qr_descripcion">Código QR del cupón %1$s</string>
+
+    <!-- Historial / recomendaciones -->
+    <string name="historial">Historial de visitas</string>
+    <string name="historial_resumen">%1$d lugares visitados · %2$d puntos ganados</string>
+    <string name="historial_vacio">Todavía no visitaste ningún lugar</string>
+    <string name="historial_vacio_detalle">Andá a Misiones, elegí un lugar y tocá “Estoy aquí” cuando llegues.</string>
+    <string name="recomendaciones">Recomendaciones de residentes</string>
+    <string name="recomendaciones_intro">Lugares y datos que recomiendan quienes viven en Jujuy.</string>
+    <string name="recomendaciones_vacio">Todavía no hay recomendaciones</string>
+    <string name="recomendaciones_vacio_detalle">Volvé a mirar más tarde.</string>
+    <string name="recomendado_por">Recomendado por %1$s</string>
+
+    <!-- Perfil -->
+    <string name="puntos_disponibles">%1$d puntos</string>
+    <string name="puntos_historicos">%1$d puntos ganados en total</string>
+    <string name="tu_rango">Tu rango</string>
+    <string name="rango_siguiente">Te faltan %1$d puntos para ser %2$s</string>
+    <string name="rango_maximo">¡Llegaste al rango máximo!</string>
+    <string name="cambiar_password">Cambiar contraseña</string>
+    <string name="password_cambiada">Listo, cambiaste tu contraseña. Las demás sesiones abiertas se cerraron.</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+    <string name="cerrar_sesion_confirmar">¿Querés cerrar la sesión en este teléfono?</string>
+
+    <!-- Plurales -->
+    <plurals name="puntos_cantidad">
+        <item quantity="one">%1$d punto</item>
+        <item quantity="many">%1$d puntos</item>
+        <item quantity="other">%1$d puntos</item>
+    </plurals>
+    <plurals name="intentos_restantes">
+        <item quantity="one">Te queda %1$d intento hoy en este lugar.</item>
+        <item quantity="many">Te quedan %1$d intentos hoy en este lugar.</item>
+        <item quantity="other">Te quedan %1$d intentos hoy en este lugar.</item>
+    </plurals>
+    <plurals name="validez_dias">
+        <item quantity="one">Válido %1$d día</item>
+        <item quantity="many">Válido %1$d días</item>
+        <item quantity="other">Válido %1$d días</item>
+    </plurals>
+    <plurals name="quedan_stock">
+        <item quantity="one">Queda %1$d</item>
+        <item quantity="many">Quedan %1$d</item>
+        <item quantity="other">Quedan %1$d</item>
+    </plurals>
+</resources>

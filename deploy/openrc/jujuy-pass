@@ -1,0 +1,57 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034
+# =============================================================================
+#  Jujuy Ciudad Pass — API (FastAPI + uvicorn) como servicio OpenRC (Alpine)
+#  Equivalente a deploy/jujuy-pass.service. install.sh lo copia a
+#  /etc/init.d/jujuy-pass; las opciones están en /etc/conf.d/jujuy-pass.
+#
+#  Comandos útiles:
+#    sudo rc-service jujuy-pass status|restart
+#    sudo tail -f /var/log/jujuy-pass/app.log
+# =============================================================================
+
+name="jujuy-pass"
+description="Jujuy Ciudad Pass - API (FastAPI/uvicorn)"
+
+: "${JCP_ENV_FILE:=/etc/jujuy-pass/jujuy-pass.env}"
+: "${JCP_APP_DIR:=/opt/jujuy-pass/actual/backend}"
+
+# supervise-daemon lo vuelve a levantar si se cae (como Restart=always).
+supervisor="supervise-daemon"
+respawn_delay=3
+respawn_max=0
+
+command="${JCP_APP_DIR}/.venv/bin/uvicorn"
+command_args="app.main:app --host 127.0.0.1 --port 8000 --workers 1 --proxy-headers --forwarded-allow-ips 127.0.0.1"
+command_user="jujuypass:jujuypass"
+directory="${JCP_APP_DIR}"
+umask="0027"
+# OpenRC >= 0.45 (Alpine 3.17+): equivalente a NoNewPrivileges=yes
+no_new_privs="yes"
+output_log="/var/log/jujuy-pass/app.log"
+error_log="/var/log/jujuy-pass/app.log"
+
+depend() {
+    need net
+    use dns logger
+    after firewall
+}
+
+start_pre() {
+    if [ ! -r "$JCP_ENV_FILE" ]; then
+        eerror "No existe $JCP_ENV_FILE (corré deploy/install.sh)"
+        return 1
+    fi
+    if [ ! -x "$command" ]; then
+        eerror "No existe $command (¿el código está desplegado en /opt/jujuy-pass/actual?)"
+        return 1
+    fi
+    # Las variables exportadas acá las hereda el proceso (como EnvironmentFile=).
+    set -a
+    # shellcheck disable=SC1090
+    . "$JCP_ENV_FILE"
+    set +a
+    export HOME=/var/lib/jujuy-pass PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
+    checkpath -d -m 0750 -o jujuypass:jujuypass /var/lib/jujuy-pass /var/log/jujuy-pass
+    checkpath -f -m 0640 -o jujuypass:jujuypass /var/log/jujuy-pass/app.log
+}
